@@ -1,23 +1,5 @@
-cc.Class({
-    extends: cc.Component,
-
-    properties: {
-        
-    },
-
-    // LIFE-CYCLE CALLBACKS:
-
-    onLoad () {
-	},
-
-    fallWater () {
-		for(var i = 0;i < 10;i++){
-			var ball = cc.instantiate(GlobalData.assets['waterLizi']);
-			this.node.addChild(ball);
-			ball.setPosition(cc.v2(0,300));
-		}
-    },
-	metaball(radius1, radius2, center1, center2, handleSize){
+var MetaBall = {
+	metaball:function(radius1, radius2, center1, center2, handleSize){
         const HALF_PI = Math.PI / 2;
         const d = center1.sub(center2).mag();
         const maxDist = radius1 + radius2 * 1.9;
@@ -42,7 +24,7 @@ cc.Class({
         }
         
         // Calculate the max spread
-        let angleBetweenCenters = cc.pAngle(center1.sub(center2), cc.v2(-1, 0));
+        let angleBetweenCenters = center1.sub(center2).angle(cc.v2(-1, 0));
         if (center1.y > center2.y) {
             angleBetweenCenters = -angleBetweenCenters;
         }
@@ -90,10 +72,11 @@ cc.Class({
             con4: h4,
         }; 
     },
-	getVector(vec, angle, radius) {
+	getVector:function(vec, angle, radius) {
         let offX = radius * Math.cos(angle);
         let offY = radius * Math.sin(angle);
 
         return cc.v2(vec.x + offX, vec.y + offY);
     }
-});
+};
+module.exports = MetaBall;

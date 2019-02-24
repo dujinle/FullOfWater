@@ -7,7 +7,7 @@ cc.PhysicsManager.prototype.start = function(){
 
 				//liquid 粒子
 		var psd = new b2.ParticleSystemDef();
-		psd.radius = 0.035;
+		psd.radius = GlobalData.GameConfig.radius;
 		this._particle = world.CreateParticleSystem(psd);
 
 		this._initCallback();
@@ -15,6 +15,10 @@ cc.PhysicsManager.prototype.start = function(){
 	this._enabled = true;
 };
 b2.Draw.prototype.DrawParticles = function( positionBuffer, radius, colorBuffer, particleCount){
+	for(var i=0; i < particleCount; i++) {
+		let vec2 = positionBuffer[i];
+		this.DrawSolidCircle(vec2,radius,0,cc.Color.BLUE);
+    }
 	//console.log('DrawParticles start');
 	/*
 	let particle_size_multiplier = 8;  // no falloff
