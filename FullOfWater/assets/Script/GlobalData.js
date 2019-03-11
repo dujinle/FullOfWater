@@ -10,8 +10,8 @@ GlobalData = {
 	GameCheckInfo:{
 		1:{
 			tryTimes:10,
-			//RigidCup:[30,-327],
-			RigidCup:[-200,-315],
+			RigidCup:[30,-327],
+			//RigidCup:[-200,-315],
 			cupLine:[-200,-315],
 			RigidDangBan120:[-200,-372],
 			RigidShuiLongTou:[-200,0]

@@ -1,3 +1,4 @@
+var EventManager = require('EventManager');
 cc.Class({
     extends: cc.Component,
 
@@ -30,8 +31,13 @@ cc.Class({
 				self.cupFinish.active = true;
 				self.cupBegin.active = false;
 				self.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.CupSmile);
+				setTimeout(function(){
+					GlobalData.GameInfoConfig.gameStatus = 0;
+					EventManager.emit({type:'FinishGame'});
+				},3000);
 			},this);
 			this.node.runAction(cc.sequence(cc.delayTime(1),call));
+			
 		}
 	}
 });
