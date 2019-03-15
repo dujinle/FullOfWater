@@ -133,9 +133,9 @@ cc.Class({
 	initGame(){
 		this.node.active = true;
 		this.audioManager.getComponent('AudioManager').playGameBg();
-		this.checkPoint.getComponent(cc.Label).string = "第" + GlobalData.GameRunTime.GameCheckPoint + '关';
-		this.gameInfo = GlobalData.GameCheckInfo[GlobalData.GameRunTime.GameCheckPoint];
-		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameRunTime.tryTimesCurrent + '/' + this.gameInfo.tryTimes;
+		this.checkPoint.getComponent(cc.Label).string = "第" + GlobalData.GameInfoConfig.GameCheckPoint + '关';
+		this.gameInfo = GlobalData.GameCheckInfo[GlobalData.GameInfoConfig.GameCheckPoint];
+		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + this.gameInfo.tryTimes;
 		for(var key in this.gameInfo){
 			if(GlobalData.assets[key] != null){
 				var pos = this.gameInfo[key];
@@ -225,8 +225,8 @@ cc.Class({
 		var increat = this.touchLocation.sub(this.origin);
 		var point = this.node.convertToWorldSpaceAR(this.origin);
 		this.rigidCup.getComponent('RigidCupManager').applyForce(increat,point);
-		GlobalData.GameRunTime.tryTimesCurrent += 1;
-		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameRunTime.tryTimesCurrent + '/' + this.gameInfo.tryTimes;
+		GlobalData.GameInfoConfig.tryTimesCurrent += 1;
+		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + this.gameInfo.tryTimes;
 	},
 	eventTouchCancel(event){
 		this.touchMoveFlag = false;
@@ -234,8 +234,8 @@ cc.Class({
 		var increat = this.touchLocation.sub(this.origin);
 		var point = this.node.convertToWorldSpaceAR(this.origin);
 		this.rigidCup.getComponent('RigidCupManager').applyForce(increat,point);
-		GlobalData.GameRunTime.tryTimesCurrent += 1;
-		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameRunTime.tryTimesCurrent + '/' + this.gameInfo.tryTimes;
+		GlobalData.GameInfoConfig.tryTimesCurrent += 1;
+		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + this.gameInfo.tryTimes;
 	},
 	//检查是否符合结果
 	checkOnce(){
@@ -291,6 +291,7 @@ cc.Class({
 			node.removeFromParent();
 			node.destroy();
 		}
+		this.gameStatus = 0;
 		this.audioManager.getComponent('AudioManager').stopGameBg();
 		this.particleGroup.DestroyParticles(null);
 		this.particleSystem.DestroyParticleGroup(this.particleGroup);
