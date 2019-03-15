@@ -42,22 +42,15 @@ GlobalData = {
 		bottom:1,
 		cup:2
 	},
-	GameRunTime:{
-		AudioPlayNum:0,
-		GameCheckPoint:1,
-		tryTimesCurrent:1,
-		totalScore:0,
-		maxScore:0
-	},
 	GameInfoConfig:{
+		AudioPlayNum:0,
 		audioSupport:1,
-		ballTouchBottom:0,
+		GameCheckPoint:1,
+		tryTimesCurrent:0,
 		maxScore:0,
 		maxLevel:0,
-		addCupNum:0,
 		shareTimes:0,
 		gameStatus:0,
-		linerDamp:0,
 		juNum:0
 	},
 	cdnGameConfig:{

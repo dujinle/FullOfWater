@@ -68,7 +68,7 @@ cc.Class({
 			this.pauseGameScene.setPosition(cc.v2(0,0));
 			this.pauseGameScene.getComponent('PauseGame').showPause();
 		}
-		else if(data.type == 'ReStartGame'){
+		else if(data.type == 'FRestart'){
 			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
 			this.finishGameScene.removeFromParent();
 			this.finishGameScene.destroy();
