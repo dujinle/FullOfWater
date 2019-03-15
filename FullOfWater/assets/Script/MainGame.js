@@ -3,11 +3,10 @@ var ThirdAPI = require('ThirdAPI');
 var PropManager = require('PropManager');
 var EventManager = require('EventManager');
 var WxVideoAd = require('WxVideoAd');
-var MetaBall = require('MetaBall');
 cc.Class({
-    extends: cc.Component,
+	extends: cc.Component,
 
-    properties: {
+	properties: {
 		pauseButton:cc.Node,
 		checkPoint:cc.Node,
 		groundNode:cc.Node,
@@ -19,20 +18,22 @@ cc.Class({
 		fallWaterFlag:false,
 		fallWaterWave:false,
 		audioManager:null,
-    },
+	},
 
-    onLoad () {
+	onLoad () {
 		//打开物理属性 碰撞检测
 		this.pymanager = cc.director.getPhysicsManager();
-		//this.pymanager.enabled = true;
 		this.graphics = this.graphicsNode.getComponent(cc.Graphics);
 		this.gameProp = {};
 		this.pymanager.start();
+		/*
 		this.pymanager.debugDrawFlags = cc.PhysicsManager.DrawBits.e_pairBit |
+			cc.PhysicsManager.DrawBits.e_particleBit |
 			cc.PhysicsManager.DrawBits.e_centerOfMassBit |
 			cc.PhysicsManager.DrawBits.e_jointBit |
 			cc.PhysicsManager.DrawBits.e_shapeBit |
 			cc.PhysicsManager.DrawBits.e_aabbBit;
+		*/
 	},
 	//所有面板的button按钮 返回函数
 	panelButtonCb(event,customEventData){
@@ -122,12 +123,6 @@ cc.Class({
 	//再次进入游戏 数据重置
 	enterGame(){
 		GlobalData.GameInfoConfig.juNum += 1;
-		this.ballsNum.getComponent(cc.Label).string = GlobalData.GameRunTime.BallUnFallNum;
-		this.freshPropStatus();
-		this.initFallBalls();
-		this.trickNode.getComponent('TrackManager').startTrack();
-		this.audioManager.getComponent('AudioManager').playGameBg();
-		GlobalData.GameRunTime.CurrentSpeed = GlobalData.CupConfig.CupMoveSpeed;
 		ThirdAPI.updataGameInfo();
 	},
 	initHide(audioManager){
@@ -161,6 +156,7 @@ cc.Class({
 		}
 		this.addTouchEvent();
 		this.initParticle();
+		GlobalData.GameInfoConfig.gameStatus = 1;
 		//this.buyos.active = true;
 		//this.buyos.setPosition(this.rigidCup.getPosition());
 		//this.fallWater();
@@ -208,17 +204,17 @@ cc.Class({
 		this.graphics.moveTo(this.origin.x,this.origin.y);
 		console.log('eventTouchStart',this.initLocation,this.touchLocation);
 		//for test
-		this.shuiLongTou.getComponent('ShuiLongTou').onOpen();
+		//this.shuiLongTou.getComponent('ShuiLongTou').onOpen();
 	},
 	eventTouchMove(event){
 		this.graphics.clear();
 		this.graphics.moveTo(this.origin.x,this.origin.y);
 		this.touchLocation.x += event.touch.getDelta().x;
 		this.touchLocation.y += event.touch.getDelta().y;
-        let touchPos = this.touchLocation;
-        if (touchPos.y < this.origin.y) {
-            return;
-        }
+		let touchPos = this.touchLocation;
+		if (touchPos.y < this.origin.y) {
+			return;
+		}
 		this.graphics.lineTo(touchPos.x,touchPos.y);
 		this.graphics.stroke();
 	},
@@ -278,7 +274,7 @@ cc.Class({
 		console.log('fallWater start......');
 		this.fallWaterFlag = true;
 		this.offTouchEvent();
-		this.rigidCup.runAction(cc.moveTo(0.2,this.cupLine.getPosition()));
+		//this.rigidCup.runAction(cc.moveTo(0.2,this.cupLine.getPosition()));
 		this.shuiLongTou.getComponent('ShuiLongTou').onOpen();
 		this.audioManager.getComponent('AudioManager').keepPlay(GlobalData.AudioManager.WaterFall,true);
 		this.fallWaterWave = true;
@@ -301,6 +297,9 @@ cc.Class({
 		this.node.active = false;
 	},
 	update (dt) {
+		if(GlobalData.GameInfoConfig.gameStatus != 1){
+			return;
+		}
 		if(this.touchMoveFlag == false){
 			var rigidBody = this.rigidCup.getComponent(cc.RigidBody);
 			if(rigidBody.angularVelocity == 0 && rigidBody.linearVelocity.x == 0 && rigidBody.linearVelocity.y == 0){
@@ -324,13 +323,13 @@ cc.Class({
 		let SLTSize = this.shuiLongTou.getContentSize();
 		let vertsCount = this.particleSystem.GetParticleCount();
 		let posVerts = this.particleSystem.GetPositionBuffer();
-        let gra = this.getComponent(cc.Graphics);
-        gra.clear();
-        //gra.fillColor = cc.Color.BLUE;
+		let gra = this.getComponent(cc.Graphics);
+		gra.clear();
+		//gra.fillColor = cc.Color.BLUE;
 		let totalCount = 0;
 		var box = this.rigidCup.getBoundingBox();
-        for (let i = 0; i < vertsCount; i++) {
-            let bassPos1 = cc.v2(posVerts[i].x,posVerts[i].y);
+		for (let i = 0; i < vertsCount; i++) {
+			let bassPos1 = cc.v2(posVerts[i].x,posVerts[i].y);
 			bassPos1.x = (bassPos1.x * PTM_RATIO) - size.width/2;
 			bassPos1.y = (bassPos1.y * PTM_RATIO) - size.height/2;
 			if(bassPos1.y >= (SLTPos.y - SLTSize.height/2 - 10)){
@@ -339,9 +338,9 @@ cc.Class({
 			if(box.contains(bassPos1)){
 				totalCount += 1;
 			}
-            let radius1 = GlobalData.GameConfig.radius * PTM_RATIO * 1.2;
-            gra.circle(bassPos1.x, bassPos1.y, radius1);
-            gra.fill();
+			let radius1 = GlobalData.GameConfig.radius * PTM_RATIO * 1.2;
+			gra.circle(bassPos1.x, bassPos1.y, radius1);
+			gra.fill();
 			gra.stroke();
 		}
 		if(totalCount > 3 && this.gameStatus == 0){

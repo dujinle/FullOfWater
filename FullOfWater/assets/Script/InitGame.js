@@ -67,12 +67,19 @@ cc.Class({
 			this.node.addChild(this.pauseGameScene);
 			this.pauseGameScene.setPosition(cc.v2(0,0));
 			this.pauseGameScene.getComponent('PauseGame').showPause();
-		}else if(data.type == 'ReStartGame'){
+		}
+		else if(data.type == 'ReStartGame'){
 			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
 			this.finishGameScene.removeFromParent();
 			this.finishGameScene.destroy();
-			this.clearGame();
-			this.enterGame();
+			this.mainGame.getComponent('MainGame').initGame();
+		}
+		else if(data.type == 'FinishGame'){
+			this.finishGameScene = cc.instantiate(GlobalData.assets['FinishGameScene']);
+			this.node.addChild(this.finishGameScene);
+			this.finishGameScene.setPosition(cc.v2(0,0));
+			this.finishGameScene.getComponent('FinishGame').show();
+			this.mainGame.getComponent('MainGame').destroyGame();
 		}
 		else if(data.type == 'RankView'){
 			//WxBannerAd.hideBannerAd();
