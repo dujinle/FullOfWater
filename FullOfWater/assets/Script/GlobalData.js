@@ -4,38 +4,121 @@ GlobalData = {
 		CupTouchThing:1,
 		WaterFall:2,
 		CupSmile:3,
+		Complete:4,
 		AudioEnginMore:8,
 		AudioPlays:[]
 	},
 	GameCheckInfo:{
 		1:{
-			tryTimes:10,
 			RigidCup:[30,-327],
-			//RigidCup:[-200,-315],
 			cupLine:[-200,-315],
 			RigidDangBan120:[-200,-372],
 			RigidShuiLongTou:[-200,0]
+		},
+		2:{
+			RigidCup:[-225.6667487018783, -328.1225484220456],
+			RigidDangBan240:[177.97901049475263, -268.24587706146923],
+			RigidShuiLongTou:[208.63568215892053, 99.63418290854577],
+			cupLine:[208.63556571564538, -209.97791982206803]
+		},
+		3:{
+			"RigidXZDangBan120": [
+				-192.455772113943,
+				-332.1139430284857
+			],
+			"RigidDangBan120": [
+				-86.86056971514242,
+				-369.5832083958021
+			],
+			"RigidShuiLongTou": [
+				-81.7511244377811,
+				-71.5322338830585
+			],
+			"RigidCup": [
+				209.48738765647192,
+				-328.23181149418036
+			],
+			"cupLine": [
+				-81.75139589864747,
+				-311.1387322125751
+			]
+		},
+		4:{
+			"RigidXZDangBan120": [
+				-238.44077961019485,
+				-269.0974512743628
+			],
+			"RigidDangBan120": [
+				-81.7511244377811,
+				-316.7856071964018
+			],
+			"RigidShuiLongTou": [
+				-76.64167916041976,
+				3.4062968515740977
+			],
+			"RigidCup": [
+				209.48738765647192,
+				-328.23181149418036
+			],
+			"cupLine": [
+				-76.64167916041976,
+				-258.3411310131748
+			]
+		},
+		5:{
+			"RigidDangBan240": [
+				-124.32983508245877,
+				-309.97301349325335
+			],
+			"RigidShuiLongTou": [
+				-122.62668665667164,
+				102.18890554722645
+			],
+			"cupLine": [
+				-122.62714002543743,
+				-251.7050613502377
+			],
+			"RigidCup": [
+				214.5957102273818,
+				-328.2318957672435
+			]
+		},
+		6:{
+			"RigidXFDangBan120": [
+				-226.5187406296851,
+				-328.7076461769116
+			],
+			"RigidXZDangBan120": [
+				-45.98500749625185,
+				-328.7076461769115
+			],
+			"RigidDangBan240": [
+				-139.65817091454272,
+				-270.8005997001499
+			],
+			"RigidShuiLongTou": [
+				-127.73613193403298,
+				83.45427286356824
+			],
+			"cupLine": [
+				-127.7361886796183,
+				-212.53386380477718
+			],
+			"RigidCup": [
+				226.51905082369478,
+				-328.2319358383977
+			]
 		}
 	},
 	GameCustomDefault:{
-		tryTimes:10,
+		tryTimes:3,
 		RigidCup:[30,-327],
 		RigidDangBan120:[-200,-372],
 		RigidShuiLongTou:[-200,0]
 	},
 	GameConfig:{
 		radius:0.2,
-		GuideMoveTime:2,			//引导动画时间
-		EatNodeMoveTime:0.2,		//被吃掉的子移动时间
-		EatNodeSameDelayTime:0,		//同类子移动延迟单元
-		EatNodeOtherDelayTime:0.05,	//不同类子被吃间隔时间
-		EatNodeBigTime:0.1,			//数字变大的时间这个值需要x2
-		RefreshNodeTime:0.3,		//刷新数字的时间
-		PropSBAScaleTime:0.3,		//宝箱弹出效果时间
-		NumRollCell:2,				//数字roll的单元
-		NumRollTime:0.2,			//数字刷新时长
-		EatFlyTimeCell:0.5,			//数字飞的时间总时长 EatFlyTimeCell * 2.5
-		StartGameMoveTime:0.3,		//开始界面的效果
+		GuideMoveTime:1.5,			//引导动画时间
 		PauseGameMoveTime:0.3		//暂停游戏界面的时间
 	},
 	RigidBodyTag:{
@@ -49,6 +132,7 @@ GlobalData = {
 		tryTimesCurrent:0,
 		maxScore:0,
 		maxLevel:0,
+		guidFlag:0,
 		shareTimes:0,
 		gameStatus:0,
 		juNum:0

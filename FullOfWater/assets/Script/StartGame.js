@@ -27,7 +27,7 @@ cc.Class({
 			this.soundOnNode.active = false;
 			this.soundOffNode.active = true;
 		}
-		this.scoreLabel.getComponent(cc.Label).string = '第' + GlobalData.GameInfoConfig.maxScore + '关';
+		this.scoreLabel.getComponent(cc.Label).string = '第' + GlobalData.GameInfoConfig.GameCheckPoint + '关';
 	},
 	battleButtonCb(event){
 		if(this.audioManager != null){

@@ -1,16 +1,14 @@
 var MetaBall = {
-	metaball:function(radius1, radius2, center1, center2, handleSize){
+	metaball:function(radius1, radius2, center1, center2,v, handleSize){
         const HALF_PI = Math.PI / 2;
         const d = center1.sub(center2).mag();
         const maxDist = radius1 + radius2 * 1.9;
-
-        const v = (maxDist - d) / maxDist * 2.2  + 0.4
-        
+        //console.log(d,maxDist);
         let u1, u2;
         // No blob if a radius is 0
         // or if distance between the circles is larger than max-dist
         // or if circle2 is completely inside circle1
-        if (radius1 === 0 || radius2 === 0 || d > maxDist || d <= Math.abs(radius1 - radius2)) {
+        if (radius1 === 0 || radius2 === 0 || d > maxDist || d <= (Math.abs(radius1-radius2))) {
               return null; 
         } 
         
@@ -62,6 +60,10 @@ var MetaBall = {
         // Generate the connector path
         
         return {
+			angle1:angle1,
+			angle2:angle2,
+			angle3:angle3,
+			angle4:angle4,
             pos1: p1,
             pos2: p2,
             pos3: p3,

@@ -17,7 +17,7 @@ cc.Class({
             switch (data.type) {
                 case 'gameOverUIRank':
 					wx.getFriendCloudStorage({
-						keyList: ['maxScore','gold'], // 你要获取的、托管在微信后台都key
+						keyList: ['maxScore','maxLevel'], // 你要获取的、托管在微信后台都key
 						success: res => {
 							//console.log(res.data);
 							//排序
@@ -30,7 +30,7 @@ cc.Class({
                     break;
                 case 'rankUIFriendRank':
 					wx.getFriendCloudStorage({
-						keyList: ['maxScore','gold'], // 你要获取的、托管在微信后台都key
+						keyList: ['maxScore','maxLevel'], // 你要获取的、托管在微信后台都key
 						success: res => {
 							//console.log(res.data);
 							//排序
@@ -43,7 +43,7 @@ cc.Class({
 				case 'rankUIGroupRank':
 					wx.getGroupCloudStorage({
 						shareTicket: data.shareTicket,
-						keyList: ['maxScore','gold'], // 你要获取的、托管在微信后台都key
+						keyList: ['maxScore','maxLevel'], // 你要获取的、托管在微信后台都key
 						success: res => {
 							//console.log(res.data);
 							//排序
@@ -63,7 +63,7 @@ cc.Class({
                     break;
 				case 'battleGameView':
 					wx.getFriendCloudStorage({
-						keyList: ['maxScore','gold'], // 你要获取的、托管在微信后台都key
+						keyList: ['maxScore','maxLevel'], // 你要获取的、托管在微信后台都key
 						success: res => {
 							//console.log(res.data);
 							//排序
@@ -80,7 +80,7 @@ cc.Class({
 		this.battleInit = false;
 		this.myRankData = null;
 		wx.getFriendCloudStorage({
-			keyList: ['maxScore','gold'], // 你要获取的、托管在微信后台都key
+			keyList: ['maxScore','maxLevel'], // 你要获取的、托管在微信后台都key
 			success: res => {
 				//console.log(res.data);
 				var dataList = res.data;
@@ -227,14 +227,14 @@ cc.Class({
 		for(var i = 0;i < a.KVDataList.length;i++){
 			var aitem = a.KVDataList[i];
 			//console.log(aitem);
-			if(aitem.key == "maxScore"){
+			if(aitem.key == "maxLevel"){
 				amaxScore = parseInt(aitem.value);
 			}
 		}
 		for(var i = 0;i < b.KVDataList.length;i++){
 			var bitem = b.KVDataList[i];
 			//console.log(bitem);
-			if(bitem.key == "maxScore"){
+			if(bitem.key == "maxLevel"){
 				bmaxScore = parseInt(bitem.value);
 			}
 		}

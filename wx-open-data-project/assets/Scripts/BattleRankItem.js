@@ -18,7 +18,7 @@ cc.Class({
 		this.scoreLabel.getComponent(cc.Label).string = 0;
 		for(var i = 0;i < data.KVDataList.length;i++){
 			var kvdata = data.KVDataList[i];
-			if(kvdata.key == "maxScore"){
+			if(kvdata.key == "maxLevel"){
 				this.scoreLabel.getComponent(cc.Label).string = kvdata.value;
 			}
 		}

@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.3653169014084507,
-      "y": 0.3653169014084507,
+      "x": 0.465669014084507,
+      "y": 0.465669014084507,
       "z": 1
     },
     "_quat": {
@@ -363,7 +363,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "83991aaf-9f06-4e80-a00f-b84fd420df9d"
+      "__uuid__": "18aa1c7b-3763-4cf9-95da-54ed08cfbbc2"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -377,7 +377,9 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_state": 0,
-    "_atlas": null,
+    "_atlas": {
+      "__uuid__": "51274040-aa17-4737-98ad-5f381e078d10"
+    },
     "_id": "b9Xi7L8MNGF6wdVB5Ihmfm"
   },
   {
@@ -560,7 +562,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "2d94eb0e-cb02-4b4d-8b04-479e0b10dc61"
+      "__uuid__": "bdcc6136-549d-4a1f-83de-82ee04cd1c7e"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -574,7 +576,9 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_state": 0,
-    "_atlas": null,
+    "_atlas": {
+      "__uuid__": "51274040-aa17-4737-98ad-5f381e078d10"
+    },
     "_id": "b1jPH09R1ACJ5TuyaEnWu1"
   },
   {
@@ -1633,7 +1637,7 @@
       "__id__": 5
     },
     "component": "CustomMainGame",
-    "handler": "publish",
+    "handler": "finalPublish",
     "customEventData": ""
   },
   {
@@ -1653,6 +1657,13 @@
     "finishGame": {
       "__id__": 29
     },
+    "finishButton": {
+      "__id__": 17
+    },
+    "checkButton": {
+      "__id__": 23
+    },
+    "checkFlag": false,
     "_id": "c8hcd3p/tCgbtQxEg15gi7"
   },
   {

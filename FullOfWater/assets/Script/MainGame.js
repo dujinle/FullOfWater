@@ -1,5 +1,6 @@
 var util = require('util');
 var ThirdAPI = require('ThirdAPI');
+var MetaBall = require('MetaBall');
 var PropManager = require('PropManager');
 var EventManager = require('EventManager');
 var WxVideoAd = require('WxVideoAd');
@@ -12,11 +13,8 @@ cc.Class({
 		groundNode:cc.Node,
 		tryTimesLabel:cc.Node,
 		graphicsNode:cc.Node,
-		waterFall:cc.Node,
+		guideHandle:cc.Node,
 		lastTime:0,
-		gameStatus:0,
-		fallWaterFlag:false,
-		fallWaterWave:false,
 		audioManager:null,
 	},
 
@@ -26,14 +24,8 @@ cc.Class({
 		this.graphics = this.graphicsNode.getComponent(cc.Graphics);
 		this.gameProp = {};
 		this.pymanager.start();
-		/*
-		this.pymanager.debugDrawFlags = cc.PhysicsManager.DrawBits.e_pairBit |
-			cc.PhysicsManager.DrawBits.e_particleBit |
-			cc.PhysicsManager.DrawBits.e_centerOfMassBit |
-			cc.PhysicsManager.DrawBits.e_jointBit |
-			cc.PhysicsManager.DrawBits.e_shapeBit |
-			cc.PhysicsManager.DrawBits.e_aabbBit;
-		*/
+
+		//this.pymanager.debugDrawFlags = cc.PhysicsManager.DrawBits.e_particleBit;
 	},
 	//所有面板的button按钮 返回函数
 	panelButtonCb(event,customEventData){
@@ -120,11 +112,6 @@ cc.Class({
 		}.bind(this),this);
 		this.failNode.runAction(cc.sequence(cc.fadeIn(0.5),cc.delayTime(1),cc.fadeOut(0.5),actionEnd));
 	},
-	//再次进入游戏 数据重置
-	enterGame(){
-		GlobalData.GameInfoConfig.juNum += 1;
-		ThirdAPI.updataGameInfo();
-	},
 	initHide(audioManager){
 		this.audioManager = audioManager;
 		this.node.active = false;
@@ -132,10 +119,13 @@ cc.Class({
 	//第一次进入游戏初始化数据
 	initGame(){
 		this.node.active = true;
+		let gra = this.node.getComponent(cc.Graphics);
+		gra.clear();
+		this.graphics.clear();
 		this.audioManager.getComponent('AudioManager').playGameBg();
 		this.checkPoint.getComponent(cc.Label).string = "第" + GlobalData.GameInfoConfig.GameCheckPoint + '关';
 		this.gameInfo = GlobalData.GameCheckInfo[GlobalData.GameInfoConfig.GameCheckPoint];
-		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + this.gameInfo.tryTimes;
+		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + GlobalData.GameCustomDefault.tryTimes;
 		for(var key in this.gameInfo){
 			if(GlobalData.assets[key] != null){
 				var pos = this.gameInfo[key];
@@ -155,11 +145,24 @@ cc.Class({
 			}
 		}
 		this.addTouchEvent();
-		this.initParticle();
+		this.initGuidGame();
 		GlobalData.GameInfoConfig.gameStatus = 1;
-		//this.buyos.active = true;
-		//this.buyos.setPosition(this.rigidCup.getPosition());
-		//this.fallWater();
+	},
+	initGuidGame(){
+		var self = this;
+		if(GlobalData.GameInfoConfig.guidFlag == 0){
+			var pos = this.rigidCup.getPosition();
+			this.guideHandle.active = true;
+			this.guideHandle.setPosition(pos);
+			var callFunc = cc.callFunc(function(){
+				self.guideHandle.setPosition(pos);
+			});
+			var moveEnd = cc.moveTo(GlobalData.GameConfig.GuideMoveTime,cc.v2(pos.x - 50,pos.y + 150));
+			var repeat = cc.repeatForever(cc.sequence(moveEnd,callFunc));
+			this.guideHandle.runAction(repeat);
+		}else{
+			this.guideHandle.active = false;
+		}
 	},
 	initParticle(){
 		let PTM_RATIO = cc.PhysicsManager.PTM_RATIO;
@@ -170,7 +173,7 @@ cc.Class({
 
 		this.particleSystem = this.pymanager._particle;
 		var box = new b2.PolygonShape();
-		box.SetAsBox(shuiLongTouSize.width/2/PTM_RATIO, (shuiLongTouSize.height * 2.5)/PTM_RATIO, new b2.Vec2(0, 0), 0);
+		box.SetAsBox(shuiLongTouSize.width/2/PTM_RATIO, (shuiLongTouSize.height * 1.5)/PTM_RATIO, new b2.Vec2(0, 0), 0);
 
 		var particleGroupDef = new b2.ParticleGroupDef();
 		particleGroupDef.shape = box;
@@ -196,7 +199,12 @@ cc.Class({
 	},
 	eventTouchStart(event){
 		console.log('eventTouchStart');
-		this.touchMoveFlag = true;
+		if(GlobalData.GameInfoConfig.guidFlag == 0){
+			GlobalData.GameInfoConfig.guidFlag = 1;
+			this.guideHandle.stopAllActions();
+			this.guideHandle.active = false;
+		}
+		this.unschedule(this.cupAction);
 		this.initLocation = this.rigidCup.getPosition();
 		this.touchLocation = this.node.convertToNodeSpaceAR(event.getLocation());
 		this.origin = this.touchLocation.clone();//射线原点坐标
@@ -220,22 +228,41 @@ cc.Class({
 	},
 	eventTouchEnd(event){
 		console.log('eventTouchEnd',this.touchLocation,this.origin);
-		this.touchMoveFlag = false;
 		this.graphics.clear();
 		var increat = this.touchLocation.sub(this.origin);
 		var point = this.node.convertToWorldSpaceAR(this.origin);
 		this.rigidCup.getComponent('RigidCupManager').applyForce(increat,point);
 		GlobalData.GameInfoConfig.tryTimesCurrent += 1;
-		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + this.gameInfo.tryTimes;
+		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + GlobalData.GameCustomDefault.tryTimes;
+		this.schedule(this.cupAction,0.3);
+	},
+	cupAction(){
+		this.offTouchEvent();
+		var rigidBody = this.rigidCup.getComponent(cc.RigidBody);
+		if(rigidBody.angularVelocity == 0 && rigidBody.linearVelocity.x == 0 && rigidBody.linearVelocity.y == 0){
+			//console.log(rigidBody.linearVelocity,rigidBody.angularVelocity);
+			this.addTouchEvent();
+			var res = this.checkOnce();
+			if(res == true){
+				this.offTouchEvent();
+				this.rigidCup.x = this.shuiLongTou.x;
+				this.fallWater();
+				this.unschedule(this.cupAction);
+			}else if(GlobalData.GameInfoConfig.tryTimesCurrent >= GlobalData.GameCustomDefault.tryTimes){
+				this.rigidCup.getComponent('RigidCupManager').setStatus('fail');
+				this.offTouchEvent();
+				this.unschedule(this.cupAction);
+			}
+		}
 	},
 	eventTouchCancel(event){
-		this.touchMoveFlag = false;
 		this.graphics.clear();
 		var increat = this.touchLocation.sub(this.origin);
 		var point = this.node.convertToWorldSpaceAR(this.origin);
 		this.rigidCup.getComponent('RigidCupManager').applyForce(increat,point);
 		GlobalData.GameInfoConfig.tryTimesCurrent += 1;
-		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + this.gameInfo.tryTimes;
+		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + GlobalData.GameCustomDefault.tryTimes;
+		this.schedule(this.cupAction,0.3);
 	},
 	//检查是否符合结果
 	checkOnce(){
@@ -272,12 +299,15 @@ cc.Class({
 	},
 	fallWater(){
 		console.log('fallWater start......');
-		this.fallWaterFlag = true;
+		var self = this;
+		this.initParticle();
 		this.offTouchEvent();
 		//this.rigidCup.runAction(cc.moveTo(0.2,this.cupLine.getPosition()));
-		this.shuiLongTou.getComponent('ShuiLongTou').onOpen();
 		this.audioManager.getComponent('AudioManager').keepPlay(GlobalData.AudioManager.WaterFall,true);
-		this.fallWaterWave = true;
+		this.node.runAction(cc.sequence(cc.delayTime(2),cc.callFunc(function(){
+			self.audioManager.getComponent('AudioManager').keepPlay(GlobalData.AudioManager.WaterFall,false);
+			self.rigidCup.getComponent('RigidCupManager').setStatus('smile');
+		},this)));
 	},
 	destroyGame(){
 		this.rigidCup.removeFromParent();
@@ -291,74 +321,63 @@ cc.Class({
 			node.removeFromParent();
 			node.destroy();
 		}
-		this.gameStatus = 0;
+		this.gameProp = {};
+		GlobalData.GameInfoConfig.tryTimesCurrent = 0;
 		this.audioManager.getComponent('AudioManager').stopGameBg();
-		this.particleGroup.DestroyParticles(null);
-		this.particleSystem.DestroyParticleGroup(this.particleGroup);
-		this.node.active = false;
+		if(this.particleSystem != null){
+			this.particleGroup.DestroyParticles(null);
+			this.particleSystem.DestroyParticleGroup(this.particleGroup);
+		}
+		ThirdAPI.updataGameInfo();
+		this.particleSystem = null;
 	},
 	update (dt) {
 		if(GlobalData.GameInfoConfig.gameStatus != 1){
 			return;
 		}
-		if(this.touchMoveFlag == false){
-			var rigidBody = this.rigidCup.getComponent(cc.RigidBody);
-			if(rigidBody.angularVelocity == 0 && rigidBody.linearVelocity.x == 0 && rigidBody.linearVelocity.y == 0){
-				//console.log(rigidBody.linearVelocity,rigidBody.angularVelocity);
-				var res = this.checkOnce();
-				if(res == true){
-					this.touchMoveFlag = true;
-					this.fallWater();
-				}
-			}
-		}
 		if(this.particleSystem == null){
 			return;
 		}
-		if(this.fallWaterFlag == false){
-			return;
-		}
+
 		let size = this.node.getContentSize();
 		let PTM_RATIO = cc.PhysicsManager.PTM_RATIO;
 		let SLTPos = this.shuiLongTou.getPosition();
 		let SLTSize = this.shuiLongTou.getContentSize();
 		let vertsCount = this.particleSystem.GetParticleCount();
 		let posVerts = this.particleSystem.GetPositionBuffer();
-		let gra = this.getComponent(cc.Graphics);
+		let gra = this.node.getComponent(cc.Graphics);
 		gra.clear();
-		//gra.fillColor = cc.Color.BLUE;
 		let totalCount = 0;
 		var box = this.rigidCup.getBoundingBox();
-		for (let i = 0; i < vertsCount; i++) {
+		for (let i = 0; i < vertsCount - 1; i++) {
 			let bassPos1 = cc.v2(posVerts[i].x,posVerts[i].y);
+			let bassPos2 = cc.v2(posVerts[i + 1].x,posVerts[i + 1].y);
 			bassPos1.x = (bassPos1.x * PTM_RATIO) - size.width/2;
 			bassPos1.y = (bassPos1.y * PTM_RATIO) - size.height/2;
+			bassPos2.x = (bassPos2.x * PTM_RATIO) - size.width/2;
+			bassPos2.y = (bassPos2.y * PTM_RATIO) - size.height/2;
 			if(bassPos1.y >= (SLTPos.y - SLTSize.height/2 - 10)){
 				continue;
 			}
-			if(box.contains(bassPos1)){
-				totalCount += 1;
+			var ret = null;
+			//var ret = MetaBall.metaball(GlobalData.GameConfig.radius * PTM_RATIO,GlobalData.GameConfig.radius * PTM_RATIO,bassPos1,bassPos2,0.5,2.4);
+			if(ret != null){
+				console.log(ret);
+				this.graphics.arc(bassPos1.x,bassPos1.y,GlobalData.GameConfig.radius * PTM_RATIO,ret.angle1,ret.angle2,true);
+				this.graphics.bezierCurveTo(ret.con2.x,ret.con2.y,ret.con4.x,ret.con4.y,ret.pos4.x,ret.pos4.y);
+				this.graphics.arc(bassPos2.x,bassPos2.y,GlobalData.GameConfig.radius * PTM_RATIO,ret.angle4,ret.angle3,true);
+				this.graphics.bezierCurveTo(ret.con3.x,ret.con3.y,ret.con1.x,ret.con1.y,ret.pos1.x,ret.pos1.y);
+			}else{
+				gra.circle(bassPos1.x, bassPos1.y, GlobalData.GameConfig.radius * PTM_RATIO);
 			}
-			let radius1 = GlobalData.GameConfig.radius * PTM_RATIO * 1.2;
-			gra.circle(bassPos1.x, bassPos1.y, radius1);
+			//if(box.contains(bassPos1)){
+			//	totalCount += 1;
+			//}
+			//let radius1 = GlobalData.GameConfig.radius * PTM_RATIO * 1.2;
+			//gra.circle(bassPos1.x, bassPos1.y, radius1);
 			gra.fill();
 			gra.stroke();
 		}
-		if(totalCount > 3 && this.gameStatus == 0){
-			this.gameStatus = 1;
-			this.fallWaterWave = false;
-			this.shuiLongTou.getComponent('ShuiLongTou').onClose();
-			this.audioManager.getComponent('AudioManager').keepPlay(GlobalData.AudioManager.WaterFall,false);
-			this.rigidCup.getComponent('RigidCupManager').setStatus('smile');
-		}
-		if(this.fallWaterWave == true){
-			let bassPos1 = cc.v2(posVerts[vertsCount - 1].x,posVerts[vertsCount-1].y);
-			bassPos1.x = (bassPos1.x * PTM_RATIO) - size.width/2;
-			bassPos1.y = (bassPos1.y * PTM_RATIO) - size.height/2;
-			if(bassPos1.y < (SLTPos.y - SLTSize.height/2 - 10)){
-				this.fallWaterWave = false;
-				this.audioManager.getComponent('AudioManager').keepPlay(GlobalData.AudioManager.WaterFall,false);
-			}
-		}
+
 	},
 });

@@ -17,7 +17,7 @@ cc.Class({
 			itemNode.getChildByName("scoreLabel").getComponent(cc.Label).string = 0;
 			for(var j = 0;j < dd.KVDataList.length;j++){
 				var kvdata = dd.KVDataList[j];
-				if(kvdata.key == "maxScore"){
+				if(kvdata.key == "maxLevel"){
 					itemNode.getChildByName("scoreLabel").getComponent(cc.Label).string = kvdata.value;
 				}
 			}

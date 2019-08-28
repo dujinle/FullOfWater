@@ -31,6 +31,7 @@ cc.Class({
 		//this.sharedCanvas.height = 1136;
 	},
 	onClose(){
+		this.hide();
 		this.node.removeFromParent();
 		this.node.destroy();
 	},

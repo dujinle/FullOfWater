@@ -79,17 +79,32 @@ cc.Class({
 			this.node.addChild(this.finishGameScene);
 			this.finishGameScene.setPosition(cc.v2(0,0));
 			this.finishGameScene.getComponent('FinishGame').show();
+			GlobalData.GameInfoConfig.maxLevel = GlobalData.GameInfoConfig.GameCheckPoint;
 			this.mainGame.getComponent('MainGame').destroyGame();
+			
+		}
+		else if(data.type == 'FNext'){
+			if(GlobalData.GameCheckInfo[GlobalData.GameInfoConfig.GameCheckPoint + 1] == null){
+				return;
+			}
+			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
+			this.finishGameScene.removeFromParent();
+			this.finishGameScene.destroy();
+			if(GlobalData.GameInfoConfig.gameStatus == -1){
+				GlobalData.GameInfoConfig.GameCheckPoint -= 1;
+			}
+			GlobalData.GameInfoConfig.GameCheckPoint += 1;
+			this.mainGame.getComponent('MainGame').initGame();
 		}
 		else if(data.type == 'RankView'){
 			//WxBannerAd.hideBannerAd();
 			if(this.finishGameScene != null){
 				this.finishGameScene.getComponent("FinishGame").isDraw = false;
 			}
-			this.showPBGameScene({
-				scene:'RankGameScene',
-				type:'rankUIFriendRank'
-			});
+			this.rankGameScene = cc.instantiate(GlobalData.assets['RankGameScene']);
+			this.node.addChild(this.rankGameScene);
+			this.rankGameScene.setPosition(cc.v2(0,0));
+			this.rankGameScene.getComponent('RankGame').show();
 		}
 		else if(data.type == 'RankGroupView'){
 			if(this.finishGameScene != null){

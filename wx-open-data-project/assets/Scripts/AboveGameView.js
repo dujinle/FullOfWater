@@ -43,7 +43,7 @@ cc.Class({
 	getMaxScore(dd){
 		for(var j = 0;j < dd.KVDataList.length;j++){
 			var kvdata = dd.KVDataList[j];
-			if(kvdata.key == "maxScore"){
+			if(kvdata.key == "maxLevel"){
 				return parseInt(kvdata.value);
 			}
 		}

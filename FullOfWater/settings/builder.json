@@ -12,7 +12,8 @@
   "encryptJs": true,
   "excludeScenes": [
     "cbb02df7-5c16-474f-b97b-e1e50fe1adce",
-    "4b96408b-a7e2-4c07-a5a0-7917733c1db2"
+    "4b96408b-a7e2-4c07-a5a0-7917733c1db2",
+    "a1e941bc-9b47-4f7e-82bd-475f4e75b734"
   ],
   "fb-instant-games": {},
   "includeAnySDK": false,
@@ -44,7 +45,7 @@
     "appid": "wx084f04a3e7df78b3",
     "isSubdomain": false,
     "orientation": "portrait",
-    "subContext": "wx-open-data-project"
+    "subContext": ""
   },
   "xxteaKey": "b82812f7-7606-46",
   "zipCompressJs": true

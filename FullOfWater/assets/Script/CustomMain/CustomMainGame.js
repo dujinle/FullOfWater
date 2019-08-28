@@ -7,18 +7,33 @@ cc.Class({
 		propLayout:cc.Node,
 		groundNode:cc.Node,
 		finishGame:cc.Node,
+		finishButton:cc.Node,
+		checkButton:cc.Node,
+		checkFlag:false,
     },
 
     onLoad () {
 		this.gameNodes = {};
 		this.finishGame.active = false;
+		this.checkFlag = false;
+		this.pymanager = cc.director.getPhysicsManager();
+		this.pymanager.start();
 	},
 	initGame(){
 		for(var key in GlobalData.assets){
 			if(key == 'FinishGameScene' || key == 'PauseGameScene'){
 				continue;
 			}
+			if(key == 'cupLine'){
+				continue;
+			}
 			var node = cc.instantiate(GlobalData.assets[key]);
+			if(key == 'RigidCup'){
+				node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Static;
+			}
+			if(key == 'RigidcupLine'){
+				node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Static;
+			}
 			this.propLayout.addChild(node);
 			this.addTouchEvent(node);
 		}
@@ -66,10 +81,14 @@ cc.Class({
 		this.touchNode = null;
 	},
 	publish(event){
+		if(this.checkFlag == false){
+			this.check(event);
+		}
 		var img = this.capture();
 		this.finishGame.active = true;
-		this.groundNode.active = false;
 		this.propLayout.active = false;
+		this.finishButton.active = false;
+		this.checkButton.active = false;
 		var finishSprite = this.finishGame.getChildByName('finishGameInfo');
 		var flext = finishSprite.getComponent(cc.Sprite);
 		let texture = new cc.Texture2D();
@@ -78,6 +97,18 @@ cc.Class({
         let spriteFrame = new cc.SpriteFrame();
         spriteFrame.setTexture(texture);
         flext.spriteFrame = spriteFrame;
+	},
+	finalPublish(event){
+		var gameInfo = {tryTimes:10};
+		for(var key in this.gameNodes){
+			var node = this.gameNodes[key];
+			gameInfo[key] = [node.x,node.y];
+		}
+		console.log(JSON.stringify(gameInfo,null,'\t'));
+		this.finishGame.active = false;
+		this.finishButton.active = true;
+		this.checkButton.active = true;
+		this.propLayout.active = true;
 	},
 	capture(){
 		var size = this.groundNode.getContentSize();
@@ -116,6 +147,44 @@ cc.Class({
         return img;
 	},
 	check(event){
-		
+		this.checkFlag = true;
+		try{
+			var RigidShuiLongTou = this.gameNodes['RigidShuiLongTou'];
+			if(RigidShuiLongTou == null){
+				return;
+			}
+			var sltPos = RigidShuiLongTou.getPosition();
+			var cupLine = this.gameNodes['RigidcupLine'];
+			cupLine.x = sltPos.x;
+			var size = cupLine.getContentSize();
+			var pos = cupLine.getPosition();
+			for(var key in this.gameNodes){
+				var node = this.gameNodes[key];
+				if(key == 'RigidShuiLongTou'){
+					continue;
+				}
+				if(key == 'RigidcupLine'){
+					node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic;
+					continue;
+				}
+				if(key == 'RigidCup'){
+					node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic;
+					continue;
+				}
+				var lpos = node.getPosition();
+				var lsize = node.getContentSize();
+				var lowY = lpos.y - lsize.height/2;
+				var upY = pos.y + size.height/2;
+				if(lowY >= upY){
+					var coverage = util.getCoverAge(node,cupLine);
+					if(coverage > 0.8){
+						console.log('zhe dang  weizhi');
+						return false;
+					}
+				}
+			}
+		}catch(err){
+			console.log(err);
+		}
 	}
 });
