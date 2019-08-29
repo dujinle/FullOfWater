@@ -1,4 +1,4 @@
-var EventManager = require('EventManager');
+
 var ThirdAPI = require('ThirdAPI');
 cc.Class({
     extends: cc.Component,

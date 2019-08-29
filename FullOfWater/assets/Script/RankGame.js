@@ -31,9 +31,8 @@ cc.Class({
 		//this.sharedCanvas.height = 1136;
 	},
 	onClose(){
-		this.hide();
-		this.node.removeFromParent();
-		this.node.destroy();
+		this.isDraw = false;
+		this.node.active = false;
 	},
 	show(){
 		console.log("finish game show");
@@ -43,10 +42,6 @@ cc.Class({
 			type:'rankUIFriendRank'
 		};
 		ThirdAPI.getRank(param);
-	},
-	hide(){
-		this.isDraw = false;
-		this.node.active = false;
 	},
 	friendRankCb(){
 		console.log("finish game show");

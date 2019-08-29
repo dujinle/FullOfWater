@@ -1,5 +1,4 @@
 var ThirdAPI = require('ThirdAPI');
-var EventManager = require('EventManager');
 cc.Class({
     extends: cc.Component,
 
@@ -8,18 +7,10 @@ cc.Class({
 		soundOnNode:cc.Node,
 		soundOffNode:cc.Node,
 		scoreLabel:cc.Node,
-		audioManager:null,
+		callback:null,
     },
-    onLoad () {
-	},
-	onShow(audioManager){
-		this.audioManager = audioManager;
+	onShow(){
 		this.node.active = true;
-	},
-	onHide(){
-		this.node.active = false;
-	},
-	start(){
 		if(GlobalData.GameInfoConfig.audioSupport == 1){
 			this.soundOnNode.active = true;
 			this.soundOffNode.active = false;
@@ -30,16 +21,12 @@ cc.Class({
 		this.scoreLabel.getComponent(cc.Label).string = '第' + GlobalData.GameInfoConfig.GameCheckPoint + '关';
 	},
 	battleButtonCb(event){
-		if(this.audioManager != null){
-			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-		}
-		EventManager.emit({type:'BattleView'});
+		GlobalData.game.EventFunc({type:'BattleView'});
 	},
 	startButtonCb(event){
-		if(this.audioManager != null){
-			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-		}
-		EventManager.emit({type:'StartGame'});
+		this.node.active = false;
+		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
+		GlobalData.game.mainGame.getComponent('MainGame').initGame();
 	},
 	soundButtonCb(){
 		if(GlobalData.GameInfoConfig.audioSupport == 0){
@@ -53,9 +40,6 @@ cc.Class({
 		}
 	},
     shareButtonCb(){
-		if(this.audioManager != null){
-			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-		}
 		var param = {
 			type:null,
 			arg:null,
@@ -67,16 +51,14 @@ cc.Class({
 		ThirdAPI.shareGame(param);
 	},
 	rankButtonCb(){
-		if(this.audioManager != null){
-			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-		}
-		EventManager.emit({type:'RankView'});
+		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
+		var rankGameScene = cc.instantiate(GlobalData.assets['RankGameScene']);
+		GlobalData.game.node.addChild(rankGameScene);
+		rankGameScene.setPosition(cc.v2(0,0));
+		rankGameScene.getComponent('RankGame').show();
 	},
 	groupRankButtonCb(){
-		if(this.audioManager != null){
-			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-		}
-		EventManager.emit({type:'RankGroupView'});
+		GlobalData.game.EventFunc({type:'RankGroupView'});
 	},
 	shareSuccessCb(type, shareTicket, arg){
 		console.log(type, shareTicket, arg);

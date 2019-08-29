@@ -1,5 +1,4 @@
 var ThirdAPI = require('ThirdAPI');
-var EventManager = require('EventManager');
 cc.Class({
     extends: cc.Component,
 
@@ -8,8 +7,6 @@ cc.Class({
 		isDraw:false,
 		openSprite:cc.Node,
     },
-    onLoad () {
-	},
 	start(){
 		try{
 			this.texture = new cc.Texture2D();
@@ -19,8 +16,9 @@ cc.Class({
 	},
 	show(){
 		console.log("finish game show");
+		GlobalData.game.audioManager.getComponent('AudioManager').stopGameBg();
+		this.node.active = true;
 		this.isDraw = true;
-		//this.node.active = true;
 		var param = {
 			type:'gameOverUIRank'
 		};
@@ -31,19 +29,27 @@ cc.Class({
 		this.node.active = false;
 	},
 	rankButtonCb(){
-		EventManager.emit({
-			type:'RankView'
-		});
+		this.isDraw = false;
+		GlobalData.game.rankGame.getComponent('RankGame').show();
 	},
 	restartButtonCb(){
-		EventManager.emit({
-			type:'FRestart'
-		});
+		GlobalData.game.audioManager.getComponent("AudioManager").play(GlobalData.AudioManager.ButtonClick);
+		GlobalData.game.mainGame.getComponent('MainGame').destroyGame();
+		GlobalData.game.mainGame.getComponent('MainGame').initGame();
+		this.hide();
 	},
 	nextButtonCb(){
-		EventManager.emit({
-			type:'FNext'
-		});
+		if(GlobalData.GameCheckInfo[GlobalData.GameInfoConfig.GameCheckPoint + 1] == null){
+				return;
+		}
+		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
+		GlobalData.game.mainGame.getComponent('MainGame').destroyGame();
+		this.hide();
+		if(GlobalData.GameInfoConfig.gameStatus == -1){
+			GlobalData.GameInfoConfig.GameCheckPoint -= 1;
+		}
+		GlobalData.GameInfoConfig.GameCheckPoint += 1;
+		GlobalData.game.mainGame.getComponent('MainGame').initGame();
 	},
 	shareToFriends(){
 		var param = {

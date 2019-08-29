@@ -1,4 +1,3 @@
-var EventManager = require('EventManager');
 cc.Class({
     extends: cc.Component,
 
@@ -6,19 +5,22 @@ cc.Class({
 		gotoHomeButton:cc.Node,
 		returnGame:cc.Node,
     },
-
-    onLoad () {
-	},
 	//继续游戏按钮回调
 	onContinueCb(event){
-		EventManager.emit({
-			type:'PauseContinue'
+		var self = this;
+		GlobalData.game.audioManager.getComponent('AudioManager').resumeGameBg();
+		this.hidePause(function(){
+			self.node.active = false;
 		});
 	},
 	//重新开始按钮回调
 	onResetCb(event){
-		EventManager.emit({
-			type:'PauseReset'
+		var self = this;
+		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
+		this.hidePause(function(){
+			self.node.active = false;
+			GlobalData.game.mainGame.getComponent('MainGame').destroyGame();
+			GlobalData.game.startGame.getComponent('StartGame').onShow();
 		});
 	},
 	showPause(){
@@ -48,5 +50,4 @@ cc.Class({
 			hideAction
 		));
 	}
-    // update (dt) {},
 });

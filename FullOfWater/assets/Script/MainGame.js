@@ -1,8 +1,6 @@
 var util = require('util');
 var ThirdAPI = require('ThirdAPI');
-var MetaBall = require('MetaBall');
 var PropManager = require('PropManager');
-var EventManager = require('EventManager');
 var WxVideoAd = require('WxVideoAd');
 cc.Class({
 	extends: cc.Component,
@@ -15,29 +13,22 @@ cc.Class({
 		graphicsNode:cc.Node,
 		guideHandle:cc.Node,
 		lastTime:0,
-		audioManager:null,
 	},
-
-	onLoad () {
-		//打开物理属性 碰撞检测
+	onLoad(){
 		this.pymanager = cc.director.getPhysicsManager();
 		this.graphics = this.graphicsNode.getComponent(cc.Graphics);
 		this.gameProp = {};
 		this.pymanager.start();
-
-		//this.pymanager.debugDrawFlags = cc.PhysicsManager.DrawBits.e_particleBit;
+		this.graphics.clear();
 	},
 	//所有面板的button按钮 返回函数
 	panelButtonCb(event,customEventData){
-		var self = this;
 		//继续游戏
 		console.log('panelButtonCb',customEventData);
-		this.audioManager.getComponent("AudioManager").play(GlobalData.AudioManager.ButtonClick);
+		GlobalData.game.audioManager.getComponent("AudioManager").play(GlobalData.AudioManager.ButtonClick);
 		if(customEventData == "P_show"){
-			this.audioManager.getComponent("AudioManager").pauseGameBg();
-			EventManager.emit({
-				type:'PauseGame'
-			});
+			GlobalData.game.audioManager.getComponent("AudioManager").pauseGameBg();
+			GlobalData.game.pauseGame.getComponent('PauseGame').showPause();
 		}
 	},
 	shareOrAV(prop,type){
@@ -112,17 +103,13 @@ cc.Class({
 		}.bind(this),this);
 		this.failNode.runAction(cc.sequence(cc.fadeIn(0.5),cc.delayTime(1),cc.fadeOut(0.5),actionEnd));
 	},
-	initHide(audioManager){
-		this.audioManager = audioManager;
-		this.node.active = false;
-	},
 	//第一次进入游戏初始化数据
 	initGame(){
 		this.node.active = true;
+		this.gameProp = {};
 		let gra = this.node.getComponent(cc.Graphics);
 		gra.clear();
-		this.graphics.clear();
-		this.audioManager.getComponent('AudioManager').playGameBg();
+		GlobalData.game.audioManager.getComponent('AudioManager').playGameBg();
 		this.checkPoint.getComponent(cc.Label).string = "第" + GlobalData.GameInfoConfig.GameCheckPoint + '关';
 		this.gameInfo = GlobalData.GameCheckInfo[GlobalData.GameInfoConfig.GameCheckPoint];
 		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + GlobalData.GameCustomDefault.tryTimes;
@@ -132,7 +119,6 @@ cc.Class({
 				var node = cc.instantiate(GlobalData.assets[key]);
 				if(key == 'RigidCup'){
 					this.rigidCup = node;
-					this.rigidCup.getComponent('RigidCupManager').initData(this.audioManager);
 				}else if(key == 'RigidShuiLongTou'){
 					this.shuiLongTou = node;
 				}else if(key == 'cupLine'){
@@ -303,9 +289,9 @@ cc.Class({
 		this.initParticle();
 		this.offTouchEvent();
 		//this.rigidCup.runAction(cc.moveTo(0.2,this.cupLine.getPosition()));
-		this.audioManager.getComponent('AudioManager').keepPlay(GlobalData.AudioManager.WaterFall,true);
+		GlobalData.game.audioManager.getComponent('AudioManager').keepPlay(GlobalData.AudioManager.WaterFall,true);
 		this.node.runAction(cc.sequence(cc.delayTime(2),cc.callFunc(function(){
-			self.audioManager.getComponent('AudioManager').keepPlay(GlobalData.AudioManager.WaterFall,false);
+			GlobalData.game.audioManager.getComponent('AudioManager').keepPlay(GlobalData.AudioManager.WaterFall,false);
 			self.rigidCup.getComponent('RigidCupManager').setStatus('smile');
 		},this)));
 	},
@@ -323,7 +309,6 @@ cc.Class({
 		}
 		this.gameProp = {};
 		GlobalData.GameInfoConfig.tryTimesCurrent = 0;
-		this.audioManager.getComponent('AudioManager').stopGameBg();
 		if(this.particleSystem != null){
 			this.particleGroup.DestroyParticles(null);
 			this.particleSystem.DestroyParticleGroup(this.particleGroup);

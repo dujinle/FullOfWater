@@ -1,4 +1,4 @@
-var EventManager = require('EventManager');
+
 var ThirdAPI = require('ThirdAPI');
 cc.Class({
     extends: cc.Component,
@@ -6,6 +6,9 @@ cc.Class({
     properties: {
 		startGame:cc.Node,
 		mainGame:cc.Node,
+		finishGame:cc.Node,
+		pauseGame:cc.Node,
+		rankGame:cc.Node,
 		audioManager:cc.Node,
     },
 
@@ -13,15 +16,19 @@ cc.Class({
     onLoad: function () {
 		ThirdAPI.loadLocalData();
 		this.loadDataSync();
-		EventManager.on(this.EventFunc,this);
-		this.startGame.getComponent('StartGame').onShow(this.audioManager);
-		this.mainGame.getComponent('MainGame').initHide(this.audioManager);
+		GlobalData.game = this;
+
+		this.startGame.getComponent('StartGame').onShow();
+		this.mainGame.active = false;
+		this.finishGame.active = false;
+		this.pauseGame.active = false;
+		this.rankGame.active = false;
     },
 	loadDataSync(){
 		var self = this;
 		//异步加载动态数据
 		this.rate = 0;
-		this.resLength = 6;
+		this.resLength = 10;
 		GlobalData.assets = {};
 		this.loadUpdate = function(){
 			console.log("this.rate:" + self.rate);
@@ -55,91 +62,6 @@ cc.Class({
 			}
 		});
 		this.schedule(this.loadUpdate,0.5);
-	},
-    EventFunc(data){
-		var self = this;
-		console.log(data);
-		if(data.type == 'StartGame'){
-			this.startGame.getComponent('StartGame').onHide();
-			this.mainGame.getComponent('MainGame').initGame();
-		}else if(data.type == 'PauseGame'){
-			this.pauseGameScene = cc.instantiate(GlobalData.assets['PauseGameScene']);
-			this.node.addChild(this.pauseGameScene);
-			this.pauseGameScene.setPosition(cc.v2(0,0));
-			this.pauseGameScene.getComponent('PauseGame').showPause();
-		}
-		else if(data.type == 'FRestart'){
-			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-			this.finishGameScene.removeFromParent();
-			this.finishGameScene.destroy();
-			this.mainGame.getComponent('MainGame').initGame();
-		}
-		else if(data.type == 'FinishGame'){
-			this.finishGameScene = cc.instantiate(GlobalData.assets['FinishGameScene']);
-			this.node.addChild(this.finishGameScene);
-			this.finishGameScene.setPosition(cc.v2(0,0));
-			this.finishGameScene.getComponent('FinishGame').show();
-			GlobalData.GameInfoConfig.maxLevel = GlobalData.GameInfoConfig.GameCheckPoint;
-			this.mainGame.getComponent('MainGame').destroyGame();
-			
-		}
-		else if(data.type == 'FNext'){
-			if(GlobalData.GameCheckInfo[GlobalData.GameInfoConfig.GameCheckPoint + 1] == null){
-				return;
-			}
-			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-			this.finishGameScene.removeFromParent();
-			this.finishGameScene.destroy();
-			if(GlobalData.GameInfoConfig.gameStatus == -1){
-				GlobalData.GameInfoConfig.GameCheckPoint -= 1;
-			}
-			GlobalData.GameInfoConfig.GameCheckPoint += 1;
-			this.mainGame.getComponent('MainGame').initGame();
-		}
-		else if(data.type == 'RankView'){
-			//WxBannerAd.hideBannerAd();
-			if(this.finishGameScene != null){
-				this.finishGameScene.getComponent("FinishGame").isDraw = false;
-			}
-			this.rankGameScene = cc.instantiate(GlobalData.assets['RankGameScene']);
-			this.node.addChild(this.rankGameScene);
-			this.rankGameScene.setPosition(cc.v2(0,0));
-			this.rankGameScene.getComponent('RankGame').show();
-		}
-		else if(data.type == 'RankGroupView'){
-			if(this.finishGameScene != null){
-				this.finishGameScene.getComponent("FinishGame").isDraw = false;
-			}
-			this.showPBGameScene({
-				scene:'RankGameScene',
-				type:'rankUIGroupRank'
-			});
-		}
-		else if(data.type == 'PauseContinue'){
-			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-			if(this.pauseGameScene != null){
-				this.pauseGameScene.getComponent("PauseGame").hidePause(function(){
-					self.audioManager.getComponent('AudioManager').resumeGameBg();
-					self.destroyGameBoard(self.pauseGameScene);
-				});
-			}
-		}
-		else if(data.type == 'PauseReset'){
-			this.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-			if(this.pauseGameScene != null){
-				this.pauseGameScene.getComponent("PauseGame").hidePause(function(){
-					self.destroyGameBoard(self.pauseGameScene);
-					self.mainGame.getComponent('MainGame').destroyGame();
-					self.startGame.getComponent('StartGame').onShow(self.audioManager);
-				});
-			}
-		}
-	},
-	destroyGameBoard(node){
-		if(node != null){
-			node.removeFromParent();
-			node.destroy();
-		}
 	},
 	// called every frame
     update: function (dt) {

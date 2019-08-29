@@ -8,6 +8,7 @@ cc.PhysicsManager.prototype.start = function(){
 		//liquid 粒子
 		var psd = new b2.ParticleSystemDef();
 		psd.radius = GlobalData.GameConfig.radius;
+		psd.dampingStrength = 3;
 		this._particle = world.CreateParticleSystem(psd);
 		this._initCallback();
 	}

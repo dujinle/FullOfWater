@@ -1,5 +1,4 @@
 var util = require('util');
-var EventManager = require('EventManager');
 cc.Class({
     extends: cc.Component,
 
