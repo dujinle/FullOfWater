@@ -9,6 +9,7 @@ cc.Class({
 		finishGame:cc.Node,
 		pauseGame:cc.Node,
 		rankGame:cc.Node,
+		systemTip:cc.Node,
 		audioManager:cc.Node,
     },
 
@@ -17,12 +18,13 @@ cc.Class({
 		ThirdAPI.loadLocalData();
 		this.loadDataSync();
 		GlobalData.game = this;
-
+		ThirdAPI.loadCDNData();
 		this.startGame.getComponent('StartGame').onShow();
 		this.mainGame.active = false;
 		this.finishGame.active = false;
 		this.pauseGame.active = false;
 		this.rankGame.active = false;
+		this.systemTip.active = false;
     },
 	loadDataSync(){
 		var self = this;

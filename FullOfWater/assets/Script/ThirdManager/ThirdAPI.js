@@ -26,13 +26,17 @@ let ThirdAPI = {
 		}
     },
     loadCDNData:function(){
-		var url = GlobalData.cdnWebsite + GlobalData.cdnFileDefaultPath;
-		util.httpGET(url,null,function(code,data){
-			if(code == 200){
-				util.updateObj(GlobalData,data,null);
-				console.log(GlobalData);
-			}
-		});
+		try{
+			var url = GlobalData.cdnWebsite + GlobalData.cdnFileDefaultPath;
+			util.httpGET(url,null,function(code,data){
+				if(code == 200){
+					util.updateObj(GlobalData,data,null);
+					console.log(GlobalData);
+				}
+			});
+		}catch(err){
+			console.log(err);
+		}
 	},
 	//更新游戏云端数据
     updataGameInfo: function () {

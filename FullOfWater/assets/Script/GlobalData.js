@@ -1,4 +1,6 @@
 GlobalData = {
+	cdnWebsite:'https://www.enjoymygame.com',
+	cdnFileDefaultPath:'/xiaochengxu/fullofwater/fullofwater.json',
 	AudioManager:{
 		ButtonClick:0,
 		CupTouchThing:1,
@@ -85,51 +87,44 @@ GlobalData = {
 		},
 		6:{
 			"RigidXFDangBan120": [
-				-226.5187406296851,
-				-328.7076461769116
+				-226,
+				-328
 			],
 			"RigidXZDangBan120": [
-				-45.98500749625185,
-				-328.7076461769115
+				-45,
+				-328
 			],
 			"RigidDangBan240": [
-				-139.65817091454272,
-				-270.8005997001499
+				-139,
+				-270
 			],
 			"RigidShuiLongTou": [
-				-127.73613193403298,
-				83.45427286356824
+				-127,
+				83
 			],
 			"cupLine": [
-				-127.7361886796183,
-				-212.53386380477718
+				-127,
+				-210
 			],
 			"RigidCup": [
-				226.51905082369478,
-				-328.2319358383977
+				226,
+				-328
 			]
 		}
 	},
-	GameCustomDefault:{
-		tryTimes:3,
-		RigidCup:[30,-327],
-		RigidDangBan120:[-200,-372],
-		RigidShuiLongTou:[-200,0]
-	},
 	GameConfig:{
+		tryTimes:3,
+		LeftTime:120,
 		radius:0.2,
 		GuideMoveTime:1.5,			//引导动画时间
 		PauseGameMoveTime:0.3		//暂停游戏界面的时间
-	},
-	RigidBodyTag:{
-		bottom:1,
-		cup:2
 	},
 	GameInfoConfig:{
 		AudioPlayNum:0,
 		audioSupport:1,
 		GameCheckPoint:1,
 		tryTimesCurrent:0,
+		gameTime:0,
 		maxScore:0,
 		maxLevel:0,
 		guidFlag:0,
@@ -191,6 +186,6 @@ GlobalData = {
 			}
 		}
 	},
-	cdnShareImages:["res/raw-assets/d7/d79c420a-58c2-4663-87c0-3119e3f3fd94.d3b6b.png"],
+	cdnShareImages:["res/raw-assets/02/0275e94c-56a7-410f-bd1a-fc7483f7d14a.png"],
 	cdnTexts:["你介意男生玩这个游戏吗?"]
 };

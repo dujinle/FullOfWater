@@ -12,14 +12,24 @@ cc.Class({
 		tryTimesLabel:cc.Node,
 		graphicsNode:cc.Node,
 		guideHandle:cc.Node,
+		gameTime:cc.Node,
 		lastTime:0,
 	},
 	onLoad(){
+		console.log('main game onload');
 		this.pymanager = cc.director.getPhysicsManager();
 		this.graphics = this.graphicsNode.getComponent(cc.Graphics);
 		this.gameProp = {};
 		this.pymanager.start();
 		this.graphics.clear();
+		/*
+		this.pymanager.debugDrawFlags = cc.PhysicsManager.DrawBits.e_aabbBit |
+			cc.PhysicsManager.DrawBits.e_pairBit |
+			cc.PhysicsManager.DrawBits.e_centerOfMassBit |
+			cc.PhysicsManager.DrawBits.e_jointBit |
+			cc.PhysicsManager.DrawBits.e_shapeBit
+			;
+		*/
 	},
 	//所有面板的button按钮 返回函数
 	panelButtonCb(event,customEventData){
@@ -27,6 +37,7 @@ cc.Class({
 		console.log('panelButtonCb',customEventData);
 		GlobalData.game.audioManager.getComponent("AudioManager").play(GlobalData.AudioManager.ButtonClick);
 		if(customEventData == "P_show"){
+			GlobalData.GameInfoConfig.gameStatus = 2;
 			GlobalData.game.audioManager.getComponent("AudioManager").pauseGameBg();
 			GlobalData.game.pauseGame.getComponent('PauseGame').showPause();
 		}
@@ -109,10 +120,12 @@ cc.Class({
 		this.gameProp = {};
 		let gra = this.node.getComponent(cc.Graphics);
 		gra.clear();
+		GlobalData.GameInfoConfig.gameTime = GlobalData.GameConfig.LeftTime;
+		this.gameTime.getComponent(cc.Label).string = Math.floor(GlobalData.GameInfoConfig.gameTime / 60) + ":" + GlobalData.GameInfoConfig.gameTime % 60;
 		GlobalData.game.audioManager.getComponent('AudioManager').playGameBg();
 		this.checkPoint.getComponent(cc.Label).string = "第" + GlobalData.GameInfoConfig.GameCheckPoint + '关';
 		this.gameInfo = GlobalData.GameCheckInfo[GlobalData.GameInfoConfig.GameCheckPoint];
-		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + GlobalData.GameCustomDefault.tryTimes;
+		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + GlobalData.GameConfig.tryTimes;
 		for(var key in this.gameInfo){
 			if(GlobalData.assets[key] != null){
 				var pos = this.gameInfo[key];
@@ -155,9 +168,7 @@ cc.Class({
 		var shuiLongTouSize = this.shuiLongTou.getContentSize();
 		var shuiLongTouPos = this.shuiLongTou.getPosition();
 		var size = this.node.getContentSize();
-		var world = this.pymanager._world;
-
-		this.particleSystem = this.pymanager._particle;
+		this.particleSystem = this.pymanager._particles;
 		var box = new b2.PolygonShape();
 		box.SetAsBox(shuiLongTouSize.width/2/PTM_RATIO, (shuiLongTouSize.height * 1.5)/PTM_RATIO, new b2.Vec2(0, 0), 0);
 
@@ -219,7 +230,7 @@ cc.Class({
 		var point = this.node.convertToWorldSpaceAR(this.origin);
 		this.rigidCup.getComponent('RigidCupManager').applyForce(increat,point);
 		GlobalData.GameInfoConfig.tryTimesCurrent += 1;
-		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + GlobalData.GameCustomDefault.tryTimes;
+		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + GlobalData.GameConfig.tryTimes;
 		this.schedule(this.cupAction,0.3);
 	},
 	cupAction(){
@@ -230,11 +241,13 @@ cc.Class({
 			this.addTouchEvent();
 			var res = this.checkOnce();
 			if(res == true){
+				rigidBody.type = cc.RigidBodyType.Static;
 				this.offTouchEvent();
-				this.rigidCup.x = this.shuiLongTou.x;
+				this.rigidCup.x = this.cupLine.x;
 				this.fallWater();
 				this.unschedule(this.cupAction);
-			}else if(GlobalData.GameInfoConfig.tryTimesCurrent >= GlobalData.GameCustomDefault.tryTimes){
+			}else if(GlobalData.GameInfoConfig.tryTimesCurrent >= GlobalData.GameConfig.tryTimes){
+				rigidBody.type = cc.RigidBodyType.Static;
 				this.rigidCup.getComponent('RigidCupManager').setStatus('fail');
 				this.offTouchEvent();
 				this.unschedule(this.cupAction);
@@ -247,7 +260,7 @@ cc.Class({
 		var point = this.node.convertToWorldSpaceAR(this.origin);
 		this.rigidCup.getComponent('RigidCupManager').applyForce(increat,point);
 		GlobalData.GameInfoConfig.tryTimesCurrent += 1;
-		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + GlobalData.GameCustomDefault.tryTimes;
+		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + GlobalData.GameConfig.tryTimes;
 		this.schedule(this.cupAction,0.3);
 	},
 	//检查是否符合结果
@@ -287,8 +300,7 @@ cc.Class({
 		console.log('fallWater start......');
 		var self = this;
 		this.initParticle();
-		this.offTouchEvent();
-		//this.rigidCup.runAction(cc.moveTo(0.2,this.cupLine.getPosition()));
+		this.rigidCup.getComponent('RigidCupManager').setCupImage('jingya');
 		GlobalData.game.audioManager.getComponent('AudioManager').keepPlay(GlobalData.AudioManager.WaterFall,true);
 		this.node.runAction(cc.sequence(cc.delayTime(2),cc.callFunc(function(){
 			GlobalData.game.audioManager.getComponent('AudioManager').keepPlay(GlobalData.AudioManager.WaterFall,false);
@@ -307,18 +319,33 @@ cc.Class({
 			node.removeFromParent();
 			node.destroy();
 		}
+		this.lastTime = 0;
+		GlobalData.GameInfoConfig.gameTime = 0;
 		this.gameProp = {};
 		GlobalData.GameInfoConfig.tryTimesCurrent = 0;
 		if(this.particleSystem != null){
 			this.particleGroup.DestroyParticles(null);
 			this.particleSystem.DestroyParticleGroup(this.particleGroup);
+			this.particleSystem = null;
 		}
+		let gra = this.node.getComponent(cc.Graphics);
+		gra.clear();
 		ThirdAPI.updataGameInfo();
-		this.particleSystem = null;
 	},
 	update (dt) {
 		if(GlobalData.GameInfoConfig.gameStatus != 1){
 			return;
+		}
+		this.lastTime += dt;
+		if(this.lastTime >= 1){
+			this.lastTime = 0;
+			GlobalData.GameInfoConfig.gameTime -= 1;
+			if(GlobalData.GameInfoConfig.gameTime <= 0){
+				this.rigidCup.getComponent('RigidCupManager').setStatus('fail');
+				this.offTouchEvent();
+				this.unschedule(this.cupAction);
+			}
+			this.gameTime.getComponent(cc.Label).string = Math.floor(GlobalData.GameInfoConfig.gameTime / 60) + ":" + GlobalData.GameInfoConfig.gameTime % 60;
 		}
 		if(this.particleSystem == null){
 			return;
@@ -333,7 +360,7 @@ cc.Class({
 		let gra = this.node.getComponent(cc.Graphics);
 		gra.clear();
 		let totalCount = 0;
-		var box = this.rigidCup.getBoundingBox();
+		//var box = this.rigidCup.getBoundingBox();
 		for (let i = 0; i < vertsCount - 1; i++) {
 			let bassPos1 = cc.v2(posVerts[i].x,posVerts[i].y);
 			let bassPos2 = cc.v2(posVerts[i + 1].x,posVerts[i + 1].y);

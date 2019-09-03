@@ -39,15 +39,17 @@ cc.Class({
 		this.hide();
 	},
 	nextButtonCb(){
+		if(GlobalData.GameInfoConfig.gameStatus == -1){
+			GlobalData.GameInfoConfig.GameCheckPoint -= 1;
+		}
 		if(GlobalData.GameCheckInfo[GlobalData.GameInfoConfig.GameCheckPoint + 1] == null){
-				return;
+			GlobalData.game.systemTip.active = true;
+			return;
 		}
 		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
 		GlobalData.game.mainGame.getComponent('MainGame').destroyGame();
 		this.hide();
-		if(GlobalData.GameInfoConfig.gameStatus == -1){
-			GlobalData.GameInfoConfig.GameCheckPoint -= 1;
-		}
+		
 		GlobalData.GameInfoConfig.GameCheckPoint += 1;
 		GlobalData.game.mainGame.getComponent('MainGame').initGame();
 	},

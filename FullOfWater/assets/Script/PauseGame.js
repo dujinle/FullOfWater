@@ -11,6 +11,7 @@ cc.Class({
 		GlobalData.game.audioManager.getComponent('AudioManager').resumeGameBg();
 		this.hidePause(function(){
 			self.node.active = false;
+			GlobalData.GameInfoConfig.gameStatus = 1;
 		});
 	},
 	//重新开始按钮回调

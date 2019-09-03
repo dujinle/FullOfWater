@@ -163,7 +163,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "28c08b60-6ce6-49ee-8c9d-65bc7e7d7f01"
     },
     "fileId": "78SGvvtihHV7TuQ3kTSp3j",
     "sync": false
