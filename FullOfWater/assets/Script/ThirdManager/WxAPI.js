@@ -164,8 +164,8 @@ let WxGlobal = {
         }
         if (!GlobalData) return;
         //存储key-value格式数据到微信云端
-        var maxScore = parseInt(GlobalData.GameInfoConfig.maxScore);
-        var maxLevel = parseInt(GlobalData.GameInfoConfig.maxLevel);
+        var maxScore = parseInt(GlobalData.GameInfoConfig.GameCheckPoint) + 1;
+        var maxLevel = parseInt(GlobalData.GameInfoConfig.GameCheckPoint) + 1;
 
         let obj = {
             KVDataList: [{

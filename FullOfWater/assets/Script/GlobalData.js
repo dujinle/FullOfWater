@@ -125,8 +125,6 @@ GlobalData = {
 		GameCheckPoint:1,
 		tryTimesCurrent:0,
 		gameTime:0,
-		maxScore:0,
-		maxLevel:0,
 		guidFlag:0,
 		shareTimes:0,
 		gameStatus:0,
