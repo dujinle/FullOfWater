@@ -17,6 +17,7 @@ cc.Class({
 		this.rate = 0;
 		this.resLength = 6;
 		GlobalData.assets = {};
+		GlobalData.game = this;
 		this.loadUpdate = function(){
 			console.log("this.rate:" + self.rate);
 			var scale = Math.floor((self.rate/self.resLength ) * 100);
