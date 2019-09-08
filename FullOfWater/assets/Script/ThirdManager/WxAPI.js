@@ -164,7 +164,7 @@ let WxGlobal = {
         }
         if (!GlobalData) return;
         //存储key-value格式数据到微信云端
-        var maxScore = parseInt(GlobalData.GameInfoConfig.GameCheckPoint) + 1;
+        var maxScore = parseInt(GlobalData.GameInfoConfig.GameBuDaoPoint) + 1;
         var maxLevel = parseInt(GlobalData.GameInfoConfig.GameCheckPoint) + 1;
 
         let obj = {
@@ -278,33 +278,20 @@ let WxGlobal = {
     getFriendRank: function (params) {
         try {
             let openDataContext = wx.getOpenDataContext()
-            let msg = {
-                type: params.type
-            }
             if (WxGlobal.shareTicketEnabled) {
-                msg.shareTicket = WxGlobal.shareTicket;
+                params.shareTicket = WxGlobal.shareTicket;
             }
-            console.log('post message', msg);
-            openDataContext.postMessage(msg);
-            if (params.callback) {
-                params.callback('wx');
-            }
+            openDataContext.postMessage(params);
         } catch (error) {}
     },
 	getBattleGameView:function(params){
 		try {
             let openDataContext = wx.getOpenDataContext()
-            let msg = {
-                type: params.type
-            }
             if (WxGlobal.shareTicketEnabled) {
-                msg.shareTicket = WxGlobal.shareTicket;
+                params.shareTicket = WxGlobal.shareTicket;
             }
-            console.log('post message', msg);
-            openDataContext.postMessage(msg);
-            if (params.callback) {
-                params.callback('wx');
-            }
+            console.log('post message', params);
+            openDataContext.postMessage(params);
         } catch (error) {}
 	},
     //获取群排行
@@ -324,17 +311,9 @@ let WxGlobal = {
         //分享给群
         try {
             let openDataContext = wx.getOpenDataContext()
-            let msg = {
-                type: arg.type,
-                shareTicket: shareTicket
-            }
-            openDataContext.postMessage(msg);
+			arg.shareTicket = shareTicket
+            openDataContext.postMessage(arg);
         } catch (error) {}
-
-        if (arg.callback) {
-            arg.callback(shareTicket);
-            this.shareTicket = undefined;
-        }
     },
 
     //群分享到群失败
@@ -348,13 +327,10 @@ let WxGlobal = {
         try {
 			cc.log("getGameOverUIRank",params);
             let openDataContext = wx.getOpenDataContext()
-            let msg = {
-                type: 'gameOverUIRank'
-            }
             if (WxGlobal.shareTicketEnabled) {
-                msg.shareTicket = WxGlobal.shareTicket;
+                params.shareTicket = WxGlobal.shareTicket;
             }
-            openDataContext.postMessage(msg);
+            openDataContext.postMessage(params);
         } catch (error) {}
     },
 
@@ -362,13 +338,10 @@ let WxGlobal = {
     getInitFriendRank: function (params) {
         try {
             let openDataContext = wx.getOpenDataContext();
-            let msg = {
-                type: params.type
-            }
             if (WxGlobal.shareTicketEnabled) {
-                msg.shareTicket = WxGlobal.shareTicket;
+                params.shareTicket = WxGlobal.shareTicket;
             }
-            openDataContext.postMessage(msg);
+            openDataContext.postMessage(params);
         } catch (error) {}
     },
 
@@ -376,17 +349,10 @@ let WxGlobal = {
     getNextFriendRank: function (params) {
         try {
             let openDataContext = wx.getOpenDataContext();
-            let msg = {
-                type: params.type,
-                score: params.score
-            }
             if (WxGlobal.shareTicketEnabled) {
-                msg.shareTicket = WxGlobal.shareTicket;
+                params.shareTicket = WxGlobal.shareTicket;
             }
-            openDataContext.postMessage(msg);
-            if (params.callback) {
-                params.callback('wx');
-            }
+            openDataContext.postMessage(params);
         } catch (error) {}
     },
 

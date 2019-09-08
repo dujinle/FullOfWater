@@ -13,6 +13,7 @@ cc.Class({
 	},
     start () {
         wx.onMessage(data => {
+			console.log(data);
 			this.setViewVisiable(null);
             switch (data.type) {
                 case 'gameOverUIRank':
@@ -22,21 +23,26 @@ cc.Class({
 							//console.log(res.data);
 							//排序
 							this.setViewVisiable(data.type);
-							var rankList = this.sortRank(res.data);
+							var rankList = this.sortRank(res.data,data.game);
 							this.drawRankOverList(rankList,data);
 						}
 					});
 					
                     break;
                 case 'rankUIFriendRank':
+					console.log('rankUIFriendRank');
 					wx.getFriendCloudStorage({
 						keyList: ['maxScore','maxLevel'], // 你要获取的、托管在微信后台都key
 						success: res => {
-							//console.log(res.data);
+							console.log(res.data);
 							//排序
 							this.setViewVisiable(data.type);
-							var rankList = this.sortRank(res.data);
+							var rankList = this.sortRank(res.data,data.game);
+							console.log(rankList);
 							this.drawRankFrientList(rankList,data);
+						},
+						fail:res=>{
+							console.log("getFriendUserGameData fail:",res);
 						}
 					});
                     break;
@@ -48,7 +54,7 @@ cc.Class({
 							//console.log(res.data);
 							//排序
 							this.setViewVisiable(data.type);
-							var rankList = this.sortRank(res.data);
+							var rankList = this.sortRank(res.data,data.game);
 							this.drawRankFrientList(rankList,data);
 						}
 					});
@@ -218,23 +224,55 @@ cc.Class({
 			openContext['canvas']['userdata'] = param;
 		}
 	},
-	sortRank(data){
-		return data.sort(this.sortFunction);
+	sortRank(data,game){
+		if(game == 1){
+			for(var i = 0;i < data.length;i++){
+				var item = data[i];
+				item.score = 0;
+				for(var j = 0;j < item.KVDataList.length;j++){
+					let aitem = item.KVDataList[j];
+					if(aitem.key == "maxLevel"){
+						item.score = parseInt(aitem.value);
+						break;
+					}
+				}
+			}
+			console.log(JSON.stringify(data));
+			return data.sort(this.sortMaxLevel);
+		}else{
+			for(var i = 0;i < data.length;i++){
+				var item = data[i];
+				item.score = 0;
+				for(var j = 0;j < item.KVDataList.length;j++){
+					let aitem = item.KVDataList[j];
+					if(aitem.key == "maxScore"){
+						item.score = parseInt(aitem.value);
+						break;
+					}
+				}
+			}
+			return data.sort(this.sortMaxLevel);
+		}
 	},
-	sortFunction(a,b){
+	sortMaxLevel(a,b){
+		var amaxScore = a.score;
+		var bmaxScore = b.score;
+		return  bmaxScore - amaxScore;
+	},
+	sortMaxScore(a,b){
 		var amaxScore = 0;
 		var bmaxScore = 0;
 		for(var i = 0;i < a.KVDataList.length;i++){
 			var aitem = a.KVDataList[i];
 			//console.log(aitem);
-			if(aitem.key == "maxLevel"){
+			if(aitem.key == "maxScore"){
 				amaxScore = parseInt(aitem.value);
 			}
 		}
 		for(var i = 0;i < b.KVDataList.length;i++){
 			var bitem = b.KVDataList[i];
 			//console.log(bitem);
-			if(bitem.key == "maxLevel"){
+			if(bitem.key == "maxScore"){
 				bmaxScore = parseInt(bitem.value);
 			}
 		}

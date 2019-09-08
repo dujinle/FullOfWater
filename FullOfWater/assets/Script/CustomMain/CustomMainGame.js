@@ -9,14 +9,47 @@ cc.Class({
 		finishButton:cc.Node,
 		checkButton:cc.Node,
 		checkFlag:false,
+		type:1,
     },
-
+	onScaleAdd(){
+		if(this.touchNode != null){
+			this.touchNode.scale += 0.1;
+		}
+	},
+	onScaleJian(){
+		if(this.touchNode != null){
+			this.touchNode.scale -= 0.1;
+		}
+	},
+	onScaleYAdd(){
+		if(this.touchNode != null){
+			this.touchNode.scaleY += 0.5;
+		}
+	},
+	onScaleYJian(){
+		if(this.touchNode != null){
+			this.touchNode.scaleY -= 0.5;
+		}
+	},
+	onRotateAdd(){
+		if(this.touchNode != null){
+			this.touchNode.rotation += 10;
+		}
+	},
+	onRotateJian(){
+		if(this.touchNode != null){
+			this.touchNode.rotation -= 10;
+		}
+	},
     onLoad () {
-		this.gameNodes = {};
+		this.gameNodes = [];
 		this.finishGame.active = false;
 		this.checkFlag = false;
 		this.pymanager = cc.director.getPhysicsManager();
 		this.pymanager.start();
+	},
+	setType(type){
+		this.type = type;
 	},
 	initGame(){
 		for(var key in GlobalData.assets){
@@ -34,7 +67,22 @@ cc.Class({
 				node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Static;
 			}
 			this.propLayout.addChild(node);
-			this.addTouchEvent(node);
+			node.on(cc.Node.EventType.TOUCH_START, this.touchCopy,this);
+			//this.addTouchEvent(node);
+		}
+	},
+	touchCopy(event){
+		this.initPosition = this.node.convertToNodeSpaceAR(event.getLocation());
+		let node = event.getCurrentTarget();
+		this.touchNode = cc.instantiate(node);
+		this.groundNode.addChild(this.touchNode);
+		this.touchNode.setPosition(cc.v2(0,0));
+		this.addTouchEvent(this.touchNode);
+		this.gameNodes.push(this.touchNode);
+		if(this.type == 2){
+			if(this.touchNode.name != 'RigidCup'){
+				this.touchNode.scaleY = 3;
+			}
 		}
 	},
 	addTouchEvent(node){
@@ -55,17 +103,8 @@ cc.Class({
 	},
 	eventTouchStart(event){
 		console.log('eventTouchStart');
-		this.initPosition = this.node.convertToNodeSpaceAR(event.getLocation());
 		let node = event.getCurrentTarget();
-		if(this.gameNodes[node.name] == null){
-			this.touchNode = cc.instantiate(node);
-			this.groundNode.addChild(this.touchNode);
-			this.touchNode.setPosition(this.initPosition);
-			this.addTouchEvent(this.touchNode);
-			this.gameNodes[node.name] = this.touchNode;
-		}else{
-			this.touchNode = node;
-		}
+		this.touchNode = node;
 	},
 	eventTouchMove(event){
 		let delta = event.touch.getDelta();
@@ -73,12 +112,8 @@ cc.Class({
 		this.touchNode.x += delta.x;
 		this.touchNode.y += delta.y;
 	},
-	eventTouchEnd(event){
-		this.touchNode = null;
-	},
-	eventTouchCancel(event){
-		this.touchNode = null;
-	},
+	eventTouchEnd(event){},
+	eventTouchCancel(event){},
 	publish(event){
 		if(this.checkFlag == false){
 			this.check(event);
@@ -98,16 +133,36 @@ cc.Class({
         flext.spriteFrame = spriteFrame;
 	},
 	finalPublish(event){
-		var gameInfo = {tryTimes:10};
-		for(var key in this.gameNodes){
-			var node = this.gameNodes[key];
-			gameInfo[key] = [node.x,node.y];
+		if(this.type == 1){
+			var gameInfo = {};
+			for(var i = 0;i < this.gameNodes.length;i++){
+				var node = this.gameNodes[i];
+				gameInfo[node.name] = [node.x,node.y];
+				node.removeFromParent();
+				node.destroy();
+			}
+			console.log(JSON.stringify(gameInfo,null,'\t'));
+		}else if(this.type == 2){
+			var gameInfo = [];
+			for(var i = 0;i < this.gameNodes.length;i++){
+				var node = this.gameNodes[i];
+				gameInfo.push({
+					scaleY:node.scaleY,
+					scale:node.scale,
+					rotation:node.rotation,
+					name:node.name,
+					pos:[node.x,node.y]
+				})
+				node.removeFromParent();
+				node.destroy();
+			}
+			console.log(JSON.stringify(gameInfo,null,'\t'));
 		}
-		console.log(JSON.stringify(gameInfo,null,'\t'));
 		this.finishGame.active = false;
 		this.finishButton.active = true;
 		this.checkButton.active = true;
 		this.propLayout.active = true;
+		this.gameNodes = [];
 	},
 	capture(){
 		var size = this.groundNode.getContentSize();
@@ -148,38 +203,54 @@ cc.Class({
 	check(event){
 		this.checkFlag = true;
 		try{
-			var RigidShuiLongTou = this.gameNodes['RigidShuiLongTou'];
-			if(RigidShuiLongTou == null){
-				return;
-			}
-			var sltPos = RigidShuiLongTou.getPosition();
-			var cupLine = this.gameNodes['RigidcupLine'];
-			cupLine.x = sltPos.x;
-			var size = cupLine.getContentSize();
-			var pos = cupLine.getPosition();
-			for(var key in this.gameNodes){
-				var node = this.gameNodes[key];
-				if(key == 'RigidShuiLongTou'){
-					continue;
-				}
-				if(key == 'RigidcupLine'){
-					node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic;
-					continue;
-				}
-				if(key == 'RigidCup'){
-					node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic;
-					continue;
-				}
-				var lpos = node.getPosition();
-				var lsize = node.getContentSize();
-				var lowY = lpos.y - lsize.height/2;
-				var upY = pos.y + size.height/2;
-				if(lowY >= upY){
-					var coverage = util.getCoverAge(node,cupLine);
-					if(coverage > 0.8){
-						console.log('zhe dang  weizhi');
-						return false;
+			if(this.type == 1){
+				var RigidShuiLongTou = null;
+				var cupLine = null
+				for(var i = 0;i < this.gameNodes.length;i++){
+					var node = this.gameNodes[i];
+					if(node.name == 'RigidShuiLongTou'){
+						RigidShuiLongTou = node;
 					}
+					if(node.name == 'RigidcupLine'){
+						cupLine = node;
+					}
+				}
+				if(RigidShuiLongTou == null){
+					return;
+				}
+				var sltPos = RigidShuiLongTou.getPosition();
+				cupLine.x = sltPos.x;
+				var size = cupLine.getContentSize();
+				var pos = cupLine.getPosition();
+				for(var i = 0;i < this.gameNodes.length;i++){
+					var node = this.gameNodes[i];
+					if(node.name == 'RigidShuiLongTou'){
+						continue;
+					}
+					if(node.name == 'RigidcupLine'){
+						node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic;
+						continue;
+					}
+					if(node.name == 'RigidCup'){
+						node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic;
+						continue;
+					}
+					var lpos = node.getPosition();
+					var lsize = node.getContentSize();
+					var lowY = lpos.y - lsize.height/2;
+					var upY = pos.y + size.height/2;
+					if(lowY >= upY){
+						var coverage = util.getCoverAge(node,cupLine);
+						if(coverage > 0.8){
+							console.log('zhe dang  weizhi');
+							return false;
+						}
+					}
+				}
+			}else if(this.type == 2){
+				for(var i = 0;i < this.gameNodes.length;i++){
+					var node = this.gameNodes[i];
+					node.getComponent(cc.RigidBody).type = cc.RigidBodyType.Dynamic;
 				}
 			}
 		}catch(err){

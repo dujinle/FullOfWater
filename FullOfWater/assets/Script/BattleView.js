@@ -7,11 +7,6 @@ cc.Class({
 		isDraw:false,
 		rankSprite:cc.Node,
     },
-
-    // LIFE-CYCLE CALLBACKS:
-
-    // onLoad () {},
-	
     start () {
 		try{
 			this.texture = new cc.Texture2D();
@@ -26,7 +21,8 @@ cc.Class({
 	onShow(){
 		this.node.active = true;
 		ThirdAPI.getRank({
-			type:'battleGameView'
+			type:'battleGameView',
+			game:GlobalData.GameInfoConfig.gameType
 		});
 		this.isDraw = true;
 	},

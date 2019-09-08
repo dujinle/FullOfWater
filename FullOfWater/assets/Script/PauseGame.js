@@ -5,6 +5,11 @@ cc.Class({
 		gotoHomeButton:cc.Node,
 		returnGame:cc.Node,
     },
+	onLoad(){
+		this.node.on(cc.Node.EventType.TOUCH_START,function(e){
+			e.stopPropagation();
+		})
+	},
 	//继续游戏按钮回调
 	onContinueCb(event){
 		var self = this;
@@ -20,7 +25,11 @@ cc.Class({
 		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
 		this.hidePause(function(){
 			self.node.active = false;
-			GlobalData.game.mainGame.getComponent('MainGame').destroyGame();
+			if(GlobalData.GameInfoConfig.gameType == 1){
+				GlobalData.game.mainGame.getComponent('MainGame').destroyGame();
+			}else{
+				GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').destroyGame();
+			}
 			GlobalData.game.startGame.getComponent('StartGame').onShow();
 		});
 	},

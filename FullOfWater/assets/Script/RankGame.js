@@ -7,19 +7,10 @@ cc.Class({
 		isDraw:false,
     },
     onLoad () {
-		console.log("finish game board load");
-		cc.eventManager.addListener({
-            event: cc.EventListener.TOUCH_ONE_BY_ONE,
-            swallowTouches: true,
-            // 设置是否吞没事件，在 onTouchBegan 方法返回 true 时吞没
-            onTouchBegan: function (touch, event) {
-                return true;
-            },
-            onTouchMoved: function (touch, event) {            // 触摸移动时触发
-            },
-            onTouchEnded: function (touch, event) {            // 点击事件结束处理
-			}
-        }, this.node);
+		this.node.on(cc.Node.EventType.TOUCH_START,function(e){
+			e.stopPropagation();
+		})
+		console.log("rank game board load");
 	},
 	start(){
 		try{
@@ -35,11 +26,12 @@ cc.Class({
 		this.node.active = false;
 	},
 	show(){
-		console.log("finish game show");
+		console.log("rank game show");
 		this.isDraw = true;
 		this.node.active = true;
 		var param = {
-			type:'rankUIFriendRank'
+			type:'rankUIFriendRank',
+			game:GlobalData.GameInfoConfig.gameType
 		};
 		ThirdAPI.getRank(param);
 	},
@@ -47,7 +39,8 @@ cc.Class({
 		console.log("finish game show");
 		this.isDraw = true;
 		 var param = {
-			type:'rankUIFriendRank'
+			type:'rankUIFriendRank',
+			game:GlobalData.GameInfoConfig.gameType
 		};
 		ThirdAPI.getRank(param);
 	},
@@ -55,7 +48,8 @@ cc.Class({
 		console.log("finish game show");
 		this.isDraw = true;
 		 var param = {
-			type:'rankUIGroupRank'
+			type:'rankUIGroupRank',
+			game:GlobalData.GameInfoConfig.gameType
 		};
 		ThirdAPI.getRank(param);
 	},

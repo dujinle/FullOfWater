@@ -5,10 +5,15 @@ cc.Class({
 
     properties: {
 		mainGame:cc.Node,
+		type:1,
+		buttonF:cc.Node,
+		buttonB:cc.Node,
     },
 
     // use this for initialization
     onLoad: function () {
+		this.buttonF.getComponent(cc.Button).interactable = false;
+		this.buttonB.getComponent(cc.Button).interactable = false;
 		this.loadDataSync();
     },
 	loadDataSync(){
@@ -23,7 +28,8 @@ cc.Class({
 			var scale = Math.floor((self.rate/self.resLength ) * 100);
 			if(self.rate >= self.resLength){
 				self.unschedule(self.loadUpdate);
-				self.mainGame.getComponent('CustomMainGame').initGame();;
+				self.buttonF.getComponent(cc.Button).interactable = true;
+				self.buttonB.getComponent(cc.Button).interactable = true;
 			}
 		};
 		cc.loader.loadResDir("prefabs",function (err, assets) {
@@ -38,4 +44,11 @@ cc.Class({
 		});
 		this.schedule(this.loadUpdate,0.5);
 	},
+	guankaButton(event,data){
+		this.type = parseInt(data);
+		this.buttonF.active = false;
+		this.buttonB.active = false;
+		this.mainGame.getComponent('CustomMainGame').setType(this.type);
+		this.mainGame.getComponent('CustomMainGame').initGame();
+	}
 });

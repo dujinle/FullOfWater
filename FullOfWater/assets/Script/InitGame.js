@@ -6,6 +6,7 @@ cc.Class({
     properties: {
 		startGame:cc.Node,
 		mainGame:cc.Node,
+		mainBuDaoGame:cc.Node,
 		finishGame:cc.Node,
 		pauseGame:cc.Node,
 		rankGame:cc.Node,
@@ -20,6 +21,7 @@ cc.Class({
 		GlobalData.game = this;
 		ThirdAPI.loadCDNData();
 		this.startGame.getComponent('StartGame').onShow();
+		this.mainBuDaoGame.active = false;
 		this.mainGame.active = false;
 		this.finishGame.active = false;
 		this.pauseGame.active = false;

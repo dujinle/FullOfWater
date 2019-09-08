@@ -17,12 +17,15 @@ cc.Class({
 		this.rankLabel.getComponent(cc.Label).string = data.rank;
 		this.nameLabel.getComponent(cc.Label).string = data.nickname;
 		this.scoreLabel.getComponent(cc.Label).string = 0;
+		this.scoreLabel.getComponent(cc.Label).string = data.score;
+		/*
 		for(var i = 0;i < data.KVDataList.length;i++){
 			var kvdata = data.KVDataList[i];
 			if(kvdata.key == "maxLevel"){
 				this.scoreLabel.getComponent(cc.Label).string = kvdata.value;
 			}
 		}
+		*/
 		this.loadImage(this.avatarSprite,data.avatarUrl);
 	},
 	loadImage(node,url){

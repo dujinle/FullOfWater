@@ -15,12 +15,21 @@ cc.Class({
 			itemNode.getChildByName("rankLabel").getComponent(cc.Label).string = dd.rank;
 			itemNode.getChildByName("nameLabel").getComponent(cc.Label).string = dd.nickname;
 			itemNode.getChildByName("scoreLabel").getComponent(cc.Label).string = 0;
+			itemNode.getChildByName("scoreLabel").getComponent(cc.Label).string = dd.score;
+			/*
 			for(var j = 0;j < dd.KVDataList.length;j++){
 				var kvdata = dd.KVDataList[j];
-				if(kvdata.key == "maxLevel"){
-					itemNode.getChildByName("scoreLabel").getComponent(cc.Label).string = kvdata.value;
+				if(game.game == 1){
+					if(kvdata.key == "maxLevel"){
+						itemNode.getChildByName("scoreLabel").getComponent(cc.Label).string = kvdata.value;
+					}
+				}else{
+					if(kvdata.key == "maxScore"){
+						itemNode.getChildByName("scoreLabel").getComponent(cc.Label).string = kvdata.value;
+					}
 				}
 			}
+			*/
 			if(dd.my == true){
 				itemNode.getChildByName("scoreLabel").color = new cc.color("#ba5a55");
 				itemNode.getChildByName("rankLabel").color = new cc.color("#ba5a55");
