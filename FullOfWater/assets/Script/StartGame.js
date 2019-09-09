@@ -99,7 +99,7 @@ cc.Class({
 		try{
 			if(arg == 'budaoStart'){
 				var self = this;
-				var content = '请分享到不同的群获得更多的好友帮助!';
+				var content = '请分享到不同的群才可以开始游戏!';
 				wx.showModal({
 					title:'提示',
 					content:content,

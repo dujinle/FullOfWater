@@ -30,6 +30,7 @@ let ThirdAPI = {
 			var url = GlobalData.cdnWebsite + GlobalData.cdnFileDefaultPath;
 			util.httpGET(url,null,function(code,data){
 				if(code == 200){
+					console.log(data);
 					util.updateObj(GlobalData,data,null);
 					console.log(GlobalData);
 				}

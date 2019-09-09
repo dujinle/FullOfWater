@@ -395,6 +395,8 @@ GlobalData = {
 		guidBDFlag:0,
 		shareTimes:0,
 		gameStatus:0,
+		gameFailFlag:0,
+		gameFailTimes:0,
 		juNum:0
 	},
 	cdnGameConfig:{

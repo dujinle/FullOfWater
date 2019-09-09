@@ -6,11 +6,15 @@ cc.Class({
 		rankSprite:cc.Node,
 		isDraw:false,
 		openSprite:cc.Node,
+		reStartSprite:cc.Node,
+		nextStartSprite:cc.Node,
     },
 	onLoad(){
 		this.node.on(cc.Node.EventType.TOUCH_START,function(e){
 			e.stopPropagation();
 		})
+		this.reStartSprite.active = false;
+		this.nextStartSprite.active = false;
 	},
 	start(){
 		try{
@@ -22,6 +26,8 @@ cc.Class({
 	show(){
 		console.log("finish game show");
 		GlobalData.game.audioManager.getComponent('AudioManager').stopGameBg();
+		this.reStartSprite.active = false;
+		this.nextStartSprite.active = false;
 		this.node.active = true;
 		this.isDraw = true;
 		var param = {
@@ -29,6 +35,17 @@ cc.Class({
 			game:GlobalData.GameInfoConfig.gameType
 		};
 		ThirdAPI.getRank(param);
+		if(GlobalData.GameInfoConfig.gameFailFlag == 1){
+			this.reStartSprite.active = true;
+			this.nextStartSprite.active = true;
+			if(GlobalData.GameInfoConfig.gameFailTimes > 0){
+				this.reStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['number' + GlobalData.GameInfoConfig.gameFailTimes];
+				this.nextStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['number' + GlobalData.GameInfoConfig.gameFailTimes];
+			}else{
+				this.reStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['share'];
+				this.nextStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['share'];
+			}
+		}
 	},
 	hide(){
 		this.isDraw = false;
@@ -39,6 +56,14 @@ cc.Class({
 		GlobalData.game.rankGame.getComponent('RankGame').show();
 	},
 	restartButtonCb(){
+		if(GlobalData.GameInfoConfig.gameFailFlag == 1){
+			if(GlobalData.GameInfoConfig.gameFailTimes > 0){
+				GlobalData.GameInfoConfig.gameFailTimes -= 1;
+			}else{
+				this.buttonShare('Frestart');
+				return;
+			}	
+		}
 		GlobalData.game.audioManager.getComponent("AudioManager").play(GlobalData.AudioManager.ButtonClick);
 		if(GlobalData.GameInfoConfig.gameType == 1){
 			GlobalData.game.mainGame.getComponent('MainGame').destroyGame();
@@ -50,6 +75,14 @@ cc.Class({
 		this.hide();
 	},
 	nextButtonCb(){
+		if(GlobalData.GameInfoConfig.gameFailFlag == 1){
+			if(GlobalData.GameInfoConfig.gameFailTimes > 0){
+				GlobalData.GameInfoConfig.gameFailTimes -= 1;
+			}else{
+				this.buttonShare('Fnext');
+				return;
+			}
+		}
 		if(GlobalData.GameInfoConfig.gameType == 1){
 			if(GlobalData.GameInfoConfig.gameStatus == -1){
 				GlobalData.GameInfoConfig.GameCheckPoint -= 1;
@@ -81,6 +114,17 @@ cc.Class({
 			GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
 		}
 	},
+	buttonShare(type){
+		var param = {
+			type:null,
+			arg:type,
+			successCallback:this.shareSuccessCb.bind(this),
+			failCallback:this.shareFailedCb.bind(this),
+			shareName:'share',
+			isWait:true
+		};
+		ThirdAPI.shareGame(param);
+	},
 	shareToFriends(){
 		var param = {
 			type:null,
@@ -94,9 +138,51 @@ cc.Class({
 	},
 	shareSuccessCb(type, shareTicket, arg){
 		console.log(type, shareTicket, arg);
+		if(arg == 'Frestart'){
+			GlobalData.GameInfoConfig.gameFailTimes = 3;
+			this.restartButtonCb();
+		}else if(arg == 'Fnext'){
+			GlobalData.GameInfoConfig.gameFailTimes = 3;
+			this.nextButtonCb();
+		}
 	},
 	shareFailedCb(type,arg){
 		console.log(type,arg);
+		try{
+			if(arg == 'Frestart'){
+				var self = this;
+				var content = '请分享到不同的群才可以开始游戏!';
+				wx.showModal({
+					title:'提示',
+					content:content,
+					cancelText:'取消',
+					confirmText:'确定',
+					confirmColor:'#53679c',
+					success(res){
+						if (res.confirm) {
+							self.restartButtonCb();
+						}else if(res.cancel){}
+					}
+				});
+			}else if(arg == 'Fnext'){
+				var self = this;
+				var content = '请分享到不同的群才可以开始游戏!';
+				wx.showModal({
+					title:'提示',
+					content:content,
+					cancelText:'取消',
+					confirmText:'确定',
+					confirmColor:'#53679c',
+					success(res){
+						if (res.confirm) {
+							self.nextButtonCb();
+						}else if(res.cancel){}
+					}
+				});
+			}
+		}catch(err){
+			console.log(err);
+		}
 	},
 	rankSuccessCb(){
 		if(!this.texture){

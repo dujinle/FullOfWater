@@ -46,6 +46,8 @@ cc.Class({
 			GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.CupSmile);
 			setTimeout(function(){
 				GlobalData.GameInfoConfig.gameStatus = 0;
+				GlobalData.GameInfoConfig.gameFailFlag = 0;
+				GlobalData.GameInfoConfig.gameFailTimes = 0;
 				GlobalData.game.finishGame.getComponent('FinishGame').show();
 			},2000);
 		}else if(type == 'fail'){
@@ -53,6 +55,10 @@ cc.Class({
 			GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.Complete);
 			setTimeout(function(){
 				GlobalData.GameInfoConfig.gameStatus = -1;
+				if(GlobalData.GameInfoConfig.gameFailFlag == 0){
+					GlobalData.GameInfoConfig.gameFailFlag = 1;
+					GlobalData.GameInfoConfig.gameFailTimes = 3;
+				}
 				GlobalData.game.finishGame.getComponent('FinishGame').show();
 			},2000);
 		}
