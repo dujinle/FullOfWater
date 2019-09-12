@@ -1,3 +1,30 @@
+let MyPhysicsManager = {
+	_world:null,
+	_factor:100,
+	start:function(){
+		if(this._world == null){
+			this._world = new p2.World({gravity: [0, -5]});
+			this._world.sleepMode = p2.World.BODY_SLEEPING;
+			this._world.setGlobalStiffness(1e8);
+
+            // Max number of solver iterations to do
+            this._world.solver.iterations = 20;
+
+            // Solver error tolerance
+            this._world.solver.tolerance = 0.02;
+
+            // Enables sleeping of bodies
+            this._world.sleepMode = p2.World.BODY_SLEEPING;
+		}
+	},
+	step:function(dt){
+		if(this._world != null){
+			this._world.step(1 / 60,dt,5);
+		}
+	},
+};
+module.exports = MyPhysicsManager;
+/*
 cc.PhysicsManager.prototype.start = function(){
 	if (CC_EDITOR) return;
 	if (!this._world) {
@@ -22,11 +49,4 @@ cc.PhysicsManager.prototype.start = function(){
 	}
 	this._enabled = true;
 };
-b2.Draw.prototype.DrawParticles = function( positionBuffer, radius, colorBuffer, particleCount){
-	return;
-	var color = new cc.Color(15,167,230);
-	for(var i=0; i < particleCount; i++) {
-		let vec2 = positionBuffer[i];
-		this.DrawSolidCircle(vec2,radius * 1.2,0,color);
-    }
-};
+*/

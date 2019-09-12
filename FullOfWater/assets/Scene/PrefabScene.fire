@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.465669014084507,
-      "y": 0.465669014084507,
+      "x": 2.9300977854838486,
+      "y": 2.9300977854838486,
       "z": 1
     },
     "_quat": {
@@ -642,12 +642,9 @@
       "__id__": 5
     },
     "_enabled": true,
-    "cupBegin": {
-      "__id__": 6
-    },
-    "cupFinish": {
-      "__id__": 9
-    },
+    "cupShangXin": null,
+    "cupJingYa": null,
+    "cupSmile": null,
     "audioManager": null,
     "_id": "163vgF5PxDnJzpvGpuD+U4"
   },
@@ -2727,6 +2724,8 @@
     "openSprite": {
       "__id__": 62
     },
+    "reStartSprite": null,
+    "nextStartSprite": null,
     "_id": "792yax3blH8rglx+DDWLB0"
   },
   {

@@ -23,16 +23,13 @@ cc.Class({
 		this.pymanager.start();
 		this.graphics.clear();
 		// 开启物理步长的设置
-		this.pymanager.enabledAccumulator = true;
-
+		//this.pymanager.enabledAccumulator = true;
 		// 物理步长，默认 FIXED_TIME_STEP 是 1/60
-		this.pymanager.FIXED_TIME_STEP = 1/30;
-
+		//this.pymanager.FIXED_TIME_STEP = 1/30;
 		// 每次更新物理系统处理速度的迭代次数，默认为 10
-		this.pymanager.VELOCITY_ITERATIONS = 8;
-
+		//this.pymanager.VELOCITY_ITERATIONS = 8;
 		// 每次更新物理系统处理位置的迭代次数，默认为 10
-		this.pymanager.POSITION_ITERATIONS = 8;
+		//this.pymanager.POSITION_ITERATIONS = 8;
 		/*
 		this.pymanager.debugDrawFlags = cc.PhysicsManager.DrawBits.e_aabbBit |
 			cc.PhysicsManager.DrawBits.e_pairBit |
@@ -346,6 +343,9 @@ cc.Class({
 	},
 	update (dt) {
 		if(GlobalData.GameInfoConfig.gameStatus != 1){
+			return;
+		}
+		if(GlobalData.GameInfoConfig.gameTime < 0){
 			return;
 		}
 		this.lastTime += dt;
