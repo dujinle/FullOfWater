@@ -24,7 +24,7 @@
   "md5Cache": false,
   "mergeStartScene": false,
   "oauthLoginServer": "",
-  "optimizeHotUpdate": false,
+  "optimizeHotUpdate": true,
   "orientation": {
     "landscapeLeft": true,
     "landscapeRight": true,
@@ -45,7 +45,7 @@
     "appid": "wx084f04a3e7df78b3",
     "isSubdomain": false,
     "orientation": "portrait",
-    "subContext": ""
+    "subContext": "wx-open-data-project"
   },
   "xxteaKey": "b82812f7-7606-46",
   "zipCompressJs": true

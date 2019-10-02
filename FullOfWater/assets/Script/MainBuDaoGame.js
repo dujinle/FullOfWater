@@ -221,7 +221,7 @@ cc.Class({
 		}
 		for(var i = 0;i < this.gameProp.length;i++){
 			var node = this.gameProp[i];
-			if(node.name == event.target.name){
+			if(node.node.uuid == event.target.uuid){
 				node.name = null;
 				break;
 			}
@@ -284,6 +284,7 @@ cc.Class({
 		for(var i = 0;i < this.gameProp.length;i++){
 			var node = this.gameProp[i];
 			if(node.name != null){
+				console.log(node.name,node.node.isValid);
 				node.node.removeFromParent();
 				node.node.destroy();
 			}

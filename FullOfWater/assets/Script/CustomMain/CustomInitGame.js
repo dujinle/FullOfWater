@@ -8,12 +8,17 @@ cc.Class({
 		type:1,
 		buttonF:cc.Node,
 		buttonB:cc.Node,
+		buttonCF:cc.Node,
+		buttonCB:cc.Node,
+		GameInfo:cc.Node,
     },
 
     // use this for initialization
     onLoad: function () {
 		this.buttonF.getComponent(cc.Button).interactable = false;
 		this.buttonB.getComponent(cc.Button).interactable = false;
+		this.buttonCF.getComponent(cc.Button).interactable = false;
+		this.buttonCB.getComponent(cc.Button).interactable = false;
 		this.loadDataSync();
     },
 	loadDataSync(){
@@ -23,6 +28,7 @@ cc.Class({
 		this.resLength = 6;
 		GlobalData.assets = {};
 		GlobalData.game = this;
+		ThirdAPI.loadCDNData();
 		this.loadUpdate = function(){
 			console.log("this.rate:" + self.rate);
 			var scale = Math.floor((self.rate/self.resLength ) * 100);
@@ -30,6 +36,8 @@ cc.Class({
 				self.unschedule(self.loadUpdate);
 				self.buttonF.getComponent(cc.Button).interactable = true;
 				self.buttonB.getComponent(cc.Button).interactable = true;
+				self.buttonCF.getComponent(cc.Button).interactable = true;
+				self.buttonCB.getComponent(cc.Button).interactable = true;
 			}
 		};
 		cc.loader.loadResDir("prefabs",function (err, assets) {
@@ -48,7 +56,14 @@ cc.Class({
 		this.type = parseInt(data);
 		this.buttonF.active = false;
 		this.buttonB.active = false;
-		this.mainGame.getComponent('CustomMainGame').setType(this.type);
-		this.mainGame.getComponent('CustomMainGame').initGame();
+		this.buttonCF.active = false;
+		this.buttonCB.active = false;
+		if(this.type == 1 || this.type == 2){
+			this.GameInfo.active = false;
+			this.mainGame.getComponent('CustomMainGame').setType(this.type);
+			this.mainGame.getComponent('CustomMainGame').initGame();
+		}else if(this.type == 3 || this.type == 4){
+			this.GameInfo.getComponent('GuanKaInfo').initGame(this.type - 2);
+		}
 	}
 });

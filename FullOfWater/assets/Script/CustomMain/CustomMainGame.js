@@ -133,31 +133,20 @@ cc.Class({
         flext.spriteFrame = spriteFrame;
 	},
 	finalPublish(event){
-		if(this.type == 1){
-			var gameInfo = {};
-			for(var i = 0;i < this.gameNodes.length;i++){
-				var node = this.gameNodes[i];
-				gameInfo[node.name] = [node.x,node.y];
-				node.removeFromParent();
-				node.destroy();
-			}
-			console.log(JSON.stringify(gameInfo,null,'\t'));
-		}else if(this.type == 2){
-			var gameInfo = [];
-			for(var i = 0;i < this.gameNodes.length;i++){
-				var node = this.gameNodes[i];
-				gameInfo.push({
-					scaleY:node.scaleY,
-					scale:node.scale,
-					rotation:node.rotation,
-					name:node.name,
-					pos:[node.x,node.y]
-				})
-				node.removeFromParent();
-				node.destroy();
-			}
-			console.log(JSON.stringify(gameInfo,null,'\t'));
+		var gameInfo = [];
+		for(var i = 0;i < this.gameNodes.length;i++){
+			var node = this.gameNodes[i];
+			gameInfo.push({
+				scaleY:node.scaleY,
+				scale:node.scale,
+				rotation:node.rotation,
+				name:node.name,
+				pos:[node.x,node.y]
+			})
+			node.removeFromParent();
+			node.destroy();
 		}
+		console.log(JSON.stringify(gameInfo,null,'\t'));
 		this.finishGame.active = false;
 		this.finishButton.active = true;
 		this.checkButton.active = true;

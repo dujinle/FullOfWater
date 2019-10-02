@@ -128,7 +128,7 @@ cc.Class({
 	//第一次进入游戏初始化数据
 	initGame(){
 		this.node.active = true;
-		this.gameProp = {};
+		this.gameProp = [];
 		let gra = this.node.getComponent(cc.Graphics);
 		gra.clear();
 		GlobalData.GameInfoConfig.gameTime = GlobalData.GameConfig.LeftTime;
@@ -137,21 +137,31 @@ cc.Class({
 		this.checkPoint.getComponent(cc.Label).string = "第" + GlobalData.GameInfoConfig.GameCheckPoint + '关';
 		this.gameInfo = GlobalData.GameCheckInfo[GlobalData.GameInfoConfig.GameCheckPoint];
 		this.tryTimesLabel.getComponent(cc.Label).string = GlobalData.GameInfoConfig.tryTimesCurrent + '/' + GlobalData.GameConfig.tryTimes;
-		for(var key in this.gameInfo){
-			if(GlobalData.assets[key] != null){
-				var pos = this.gameInfo[key];
-				var node = cc.instantiate(GlobalData.assets[key]);
-				if(key == 'RigidCup'){
+		for(var i = 0;i < this.gameInfo.length;i++){
+			var item = this.gameInfo[i];
+			if(GlobalData.assets[item.name] != null){
+				var pos = item.pos;
+				var node = cc.instantiate(GlobalData.assets[item.name]);
+				if(item.name == 'RigidCup'){
 					this.rigidCup = node;
-				}else if(key == 'RigidShuiLongTou'){
+				}else if(item.name == 'RigidShuiLongTou'){
 					this.shuiLongTou = node;
-				}else if(key == 'cupLine'){
+				}else if(item.name == 'cupLine'){
 					this.cupLine = node;
 				}else{
-					this.gameProp[key] = node;
+					this.gameProp.push({name:node.name,node:node});
 				}
 				this.groundNode.addChild(node);
 				node.setPosition(cc.v2(pos[0],pos[1]));
+				if(item.scale != null){
+					node.scale = item.scale;
+				}
+				if(item.scaleY != null){
+					node.scaleY = item.scaleY;
+				}
+				if(item.rotation != null){
+					node.rotation = item.rotation;
+				}
 			}
 		}
 		this.addTouchEvent();
@@ -293,8 +303,9 @@ cc.Class({
 		}
 		var size = this.rigidCup.getContentSize();
 		var pos = this.rigidCup.getPosition();
-		for(var key in this.gameProp){
-			var node = this.gameProp[key];
+		for(var i = 0;i < this.gameProp.length;i++){
+			var inode = this.gameProp[i];
+			var node = inode.node;
 			var lpos = node.getPosition();
 			var lsize = node.getContentSize();
 			var lowY = lpos.y - lsize.height/2;
@@ -320,20 +331,24 @@ cc.Class({
 		},this)));
 	},
 	destroyGame(){
+		this.unschedule(this.cupAction);
 		this.rigidCup.removeFromParent();
 		this.rigidCup.destroy();
 		this.shuiLongTou.removeFromParent();
 		this.shuiLongTou.destroy();
 		this.cupLine.removeFromParent();
 		this.cupLine.destroy();
-		for(var key in this.gameProp){
-			var node = this.gameProp[key];
-			node.removeFromParent();
-			node.destroy();
+		for(var i = 0;i < this.gameProp.length;i++){
+			var node = this.gameProp[i];
+			if(node.name != null){
+				console.log(node.name,node.node.isValid);
+				node.node.removeFromParent();
+				node.node.destroy();
+			}
 		}
 		this.lastTime = 0;
 		GlobalData.GameInfoConfig.gameTime = 0;
-		this.gameProp = {};
+		this.gameProp = [];
 		GlobalData.GameInfoConfig.tryTimesCurrent = 0;
 		if(this.particleSystem != null){
 			this.particleGroup.DestroyParticles(null);
@@ -346,6 +361,9 @@ cc.Class({
 	},
 	update (dt) {
 		if(GlobalData.GameInfoConfig.gameStatus != 1){
+			return;
+		}
+		if(GlobalData.GameInfoConfig.gameTime < 0){
 			return;
 		}
 		this.lastTime += dt;

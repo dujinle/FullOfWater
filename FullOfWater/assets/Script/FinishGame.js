@@ -56,7 +56,7 @@ cc.Class({
 		GlobalData.game.rankGame.getComponent('RankGame').show();
 	},
 	restartButtonCb(){
-		if(GlobalData.GameInfoConfig.gameFailFlag == 1){
+		if(GlobalData.GameInfoConfig.gameFailFlag == 1 && typeof wx !== 'undefined'){
 			if(GlobalData.GameInfoConfig.gameFailTimes > 0){
 				GlobalData.GameInfoConfig.gameFailTimes -= 1;
 			}else{
@@ -75,7 +75,7 @@ cc.Class({
 		this.hide();
 	},
 	nextButtonCb(){
-		if(GlobalData.GameInfoConfig.gameFailFlag == 1){
+		if(GlobalData.GameInfoConfig.gameFailFlag == 1 && typeof wx !== 'undefined'){
 			if(GlobalData.GameInfoConfig.gameFailTimes > 0){
 				GlobalData.GameInfoConfig.gameFailTimes -= 1;
 			}else{
