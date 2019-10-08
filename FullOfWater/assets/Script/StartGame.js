@@ -1,9 +1,11 @@
 var ThirdAPI = require('ThirdAPI');
+var WxVideoAd = require('WxVideoAd');
 cc.Class({
     extends: cc.Component,
 
     properties: {
 		startButton:cc.Node,
+		startBBtn:cc.Node,
 		soundOnNode:cc.Node,
 		soundOffNode:cc.Node,
 		scoreLabel:cc.Node,
@@ -14,6 +16,21 @@ cc.Class({
 		this.node.on(cc.Node.EventType.TOUCH_START,function(e){
 			e.stopPropagation();
 		})
+	},
+	btnFalse(flag){
+		this.startButton.getComponent(cc.Button).interactable = flag;
+		this.startBBtn.getComponent(cc.Button).interactable = flag;
+		if(flag == true){
+			if(GlobalData.cdnGameConfig.bdOpenType == 1){
+				if(GlobalData.assets['share'] != null){
+					this.openType.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['share'];
+				}
+			}else{
+				if(GlobalData.assets['video'] != null){
+					this.openType.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['video'];
+				}
+			}
+		}
 	},
 	onShow(){
 		console.log('start game scene');
@@ -26,6 +43,15 @@ cc.Class({
 			this.soundOffNode.active = true;
 		}
 		this.scoreLabel.getComponent(cc.Label).string = '第' + GlobalData.GameInfoConfig.GameCheckPoint + '关';
+		if(GlobalData.cdnGameConfig.bdOpenType == 1){
+			if(GlobalData.assets['share'] != null){
+				this.openType.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['share'];
+			}
+		}else{
+			if(GlobalData.assets['video'] != null){
+				this.openType.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['video'];
+			}
+		}
 		if(GlobalData.GameInfoConfig.guidBDFlag == 0){
 			this.openType.active = true;
 		}else{
@@ -33,25 +59,42 @@ cc.Class({
 		}
 	},
 	bdButtonCb(event){
+		if(event != null){
+			GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
+		}
 		if(GlobalData.GameInfoConfig.guidBDFlag == 0){
-			if (typeof wx == 'undefined') {
-				this.node.active = false;
-				GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-				GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
-				return;
+			if(GlobalData.cdnGameConfig.bdOpenType == 1){ //分享
+				if (typeof wx == 'undefined') {
+					this.node.active = false;
+					GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+					return;
+				}
+				var param = {
+					type:null,
+					arg:'budaoStart',
+					successCallback:this.shareSuccessCb.bind(this),
+					failCallback:this.shareFailedCb.bind(this),
+					shareName:'share',
+					isWait:true
+				};
+				ThirdAPI.shareGame(param);
+			}else{
+				this.DJAVTrueCallFunc = function(arg){
+					this.node.active = false;
+					GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+				};
+				this.DJAVFalseCallFunc = function(arg){
+					if(arg == 'cancle'){
+						this.shareFailedCb(null,'budaoStart');
+					}else if(arg == 'error'){
+						GlobalData.cdnGameConfig.bdOpenType = 1;
+						this.bdButtonCb(null);
+					}
+				};
+				WxVideoAd.installVideo(this.DJAVTrueCallFunc.bind(this),this.DJAVFalseCallFunc.bind(this),null);
 			}
-			var param = {
-				type:null,
-				arg:'budaoStart',
-				successCallback:this.shareSuccessCb.bind(this),
-				failCallback:this.shareFailedCb.bind(this),
-				shareName:'share',
-				isWait:true
-			};
-			ThirdAPI.shareGame(param);
 		}else{
 			this.node.active = false;
-			GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
 			GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
 		}
 		GlobalData.game.mainGame.active = false;
@@ -91,7 +134,6 @@ cc.Class({
 	shareSuccessCb(type, shareTicket, arg){
 		if(arg == 'budaoStart'){
 			this.node.active = false;
-			GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
 			GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
 		}
 	},
@@ -99,7 +141,10 @@ cc.Class({
 		try{
 			if(arg == 'budaoStart'){
 				var self = this;
-				var content = '请分享到不同的群才可以开始游戏!';
+				var content = GlobalData.msgBox.DJShareContent;
+				if(GlobalData.cdnGameConfig.bdOpenType == 2){
+					content = GlobalData.msgBox.DJAVContent;
+				}
 				wx.showModal({
 					title:'提示',
 					content:content,
@@ -108,7 +153,7 @@ cc.Class({
 					confirmColor:'#53679c',
 					success(res){
 						if (res.confirm) {
-							self.bdButtonCb();
+							self.bdButtonCb(null);
 						}else if(res.cancel){}
 					}
 				});

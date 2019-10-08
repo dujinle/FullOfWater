@@ -1,4 +1,5 @@
 var ThirdAPI = require('ThirdAPI');
+var WxVideoAd = require('WxVideoAd');
 cc.Class({
     extends: cc.Component,
 
@@ -6,6 +7,7 @@ cc.Class({
 		rankSprite:cc.Node,
 		isDraw:false,
 		openSprite:cc.Node,
+		openType:'DJShare',
 		reStartSprite:cc.Node,
 		nextStartSprite:cc.Node,
     },
@@ -42,8 +44,15 @@ cc.Class({
 				this.reStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['number' + GlobalData.GameInfoConfig.gameFailTimes];
 				this.nextStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['number' + GlobalData.GameInfoConfig.gameFailTimes];
 			}else{
-				this.reStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['share'];
-				this.nextStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['share'];
+				if(Math.random() >= GlobalData.cdnGameConfig.shareOrVideoRate){
+					this.reStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['share'];
+					this.nextStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['share'];
+					this.openType = 'DJShare';
+				}else{
+					this.reStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['video'];
+					this.nextStartSprite.getComponent(cc.Sprite).spriteFrame = GlobalData.assets['video'];
+					this.openType = 'DJAV';
+				}
 			}
 		}
 	},
@@ -91,11 +100,10 @@ cc.Class({
 				GlobalData.game.systemTip.active = true;
 				return;
 			}
+			GlobalData.GameInfoConfig.GameCheckPoint += 1;
 			GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
 			GlobalData.game.mainGame.getComponent('MainGame').destroyGame();
 			this.hide();
-			
-			GlobalData.GameInfoConfig.GameCheckPoint += 1;
 			GlobalData.game.mainGame.getComponent('MainGame').initGame();
 		}
 		else{
@@ -106,24 +114,47 @@ cc.Class({
 				GlobalData.game.systemTip.active = true;
 				return;
 			}
+			GlobalData.GameInfoConfig.GameBuDaoPoint += 1;
 			GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
 			GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').destroyGame();
 			this.hide();
-			
-			GlobalData.GameInfoConfig.GameBuDaoPoint += 1;
 			GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
 		}
 	},
 	buttonShare(type){
-		var param = {
-			type:null,
-			arg:type,
-			successCallback:this.shareSuccessCb.bind(this),
-			failCallback:this.shareFailedCb.bind(this),
-			shareName:'share',
-			isWait:true
-		};
-		ThirdAPI.shareGame(param);
+		if(this.openType == 'DJShare'){
+			var param = {
+				type:null,
+				arg:type,
+				successCallback:this.shareSuccessCb.bind(this),
+				failCallback:this.shareFailedCb.bind(this),
+				shareName:'share',
+				isWait:true
+			};
+			ThirdAPI.shareGame(param);
+		}else if(this.openType == 'DJAV'){
+			this.DJAVTrueCallFunc = function(arg){
+				GlobalData.GameInfoConfig.gameFailTimes = 3;
+				if(type == 'Frestart'){
+					this.restartButtonCb();
+				}else if(type == 'Fnext'){
+					this.nextButtonCb();
+				}
+			};
+			this.DJAVFalseCallFunc = function(arg){
+				if(arg == 'cancle'){
+					this.shareFailedCb(this.openType,type);
+				}else if(arg == 'error'){
+					this.openType = 'DJShare'
+					if(type == 'Frestart'){
+						this.restartButtonCb();
+					}else if(type == 'Fnext'){
+						this.nextButtonCb();
+					}
+				}
+			};
+			WxVideoAd.installVideo(this.DJAVTrueCallFunc.bind(this),this.DJAVFalseCallFunc.bind(this),null);
+		}
 	},
 	shareToFriends(){
 		var param = {
@@ -149,9 +180,12 @@ cc.Class({
 	shareFailedCb(type,arg){
 		console.log(type,arg);
 		try{
+			var content = GlobalData.msgBox.DJShareContent;
+			if(this.openType == 'DJAV'){
+				content = GlobalData.msgBox.DJAVContent;
+			}
 			if(arg == 'Frestart'){
 				var self = this;
-				var content = '请分享到不同的群才可以开始游戏!';
 				wx.showModal({
 					title:'提示',
 					content:content,
@@ -166,7 +200,6 @@ cc.Class({
 				});
 			}else if(arg == 'Fnext'){
 				var self = this;
-				var content = '请分享到不同的群才可以开始游戏!';
 				wx.showModal({
 					title:'提示',
 					content:content,

@@ -1,4 +1,4 @@
-
+var util = require('util');
 var ThirdAPI = require('ThirdAPI');
 cc.Class({
     extends: cc.Component,
@@ -21,24 +21,27 @@ cc.Class({
 		GlobalData.game = this;
 		ThirdAPI.loadCDNData();
 		this.startGame.getComponent('StartGame').onShow();
+		this.startGame.getComponent('StartGame').btnFalse(false);
 		this.mainBuDaoGame.active = false;
 		this.mainGame.active = false;
 		this.finishGame.active = false;
 		this.pauseGame.active = false;
 		this.rankGame.active = false;
 		this.systemTip.active = false;
+		util.customScreenAdapt(this);
     },
 	loadDataSync(){
 		var self = this;
 		//异步加载动态数据
 		this.rate = 0;
-		this.resLength = 10;
+		this.resLength = 16;
 		GlobalData.assets = {};
 		this.loadUpdate = function(){
 			console.log("this.rate:" + self.rate);
 			var scale = Math.floor((self.rate/self.resLength ) * 100);
 			if(self.rate >= self.resLength){
 				self.unschedule(self.loadUpdate);
+				self.startGame.getComponent('StartGame').btnFalse(true);
 			}
 		};
 		cc.loader.loadRes("dynamicPlist", cc.SpriteAtlas, function (err, atlas) {
@@ -59,9 +62,6 @@ cc.Class({
 			for(var i = 0;i < assets.length;i++){
 				GlobalData.assets[assets[i].name] = assets[i];
 				self.rate = self.rate + 1;
-				if(assets[i].name == 'AudioManager'){
-					self.audioManager = cc.instantiate(assets[i]);
-				}
 				console.log("load res prefab:" + assets[i].name);
 			}
 		});

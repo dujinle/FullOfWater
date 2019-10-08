@@ -1,6 +1,11 @@
 GlobalData = {
+	phoneModel:'Normal',
 	cdnWebsite:'https://www.enjoymygame.com',
 	cdnFileDefaultPath:'/xiaochengxu/fullofwater/fullofwater1.2.json',
+	msgBox:{
+		DJAVContent:'看完视频才能获得奖励，请再看一次!',
+		DJShareContent:'请分享到不同的群获得更多的好友帮助!'
+	},
 	AudioManager:{
 		ButtonClick:0,
 		CupTouchThing:1,
@@ -1332,7 +1337,8 @@ GlobalData = {
 	cdnGameConfig:{
 		refreshBanner:0,		//0 关闭	1打开
 		minShareTime:2,
-		gameModel:'crazy',
+		bdOpenType:2,
+		shareOrVideoRate:0.5,
 		shareSuccessWeight:[1,1,0.8,0.8,0.6],
 		shareCustomSet:1		//0 关闭 自定义分享 1打开自定义分享
 	},

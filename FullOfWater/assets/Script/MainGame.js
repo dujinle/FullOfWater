@@ -1,7 +1,6 @@
 var util = require('util');
+var WxBannerAd = require('WxBannerAd');
 var ThirdAPI = require('ThirdAPI');
-var PropManager = require('PropManager');
-var WxVideoAd = require('WxVideoAd');
 cc.Class({
 	extends: cc.Component,
 
@@ -53,78 +52,6 @@ cc.Class({
 			GlobalData.game.pauseGame.getComponent('PauseGame').showPause();
 		}
 	},
-	shareOrAV(prop,type){
-		this.iscallBack = false;
-		this.propKey = prop;
-		if(type == "PropShare"){
-			this.shareSuccessCb = function(type, shareTicket, arg){
-				if(this.iscallBack == false){
-					this.trickNode.getComponent('TrackManager').continueTrack();
-					EventManager.emit({
-						type:'GetPropSuccess',
-						prop:this.propKey
-					});
-				}
-				this.iscallBack = true;
-			};
-			this.shareFailedCb = function(type,arg){
-				if(this.iscallBack == false){
-					this.trickNode.getComponent('TrackManager').continueTrack();
-					this.showFailInfo(null);
-				}
-				this.iscallBack = true;
-			};
-			var param = {
-				type:null,
-				arg:null,
-				successCallback:this.shareSuccessCb.bind(this),
-				failCallback:this.shareFailedCb.bind(this),
-				shareName:type,
-				isWait:true
-			};
-			if(GlobalData.cdnGameConfig.shareCustomSet == 0){
-				param.isWait = false;
-			}
-			ThirdAPI.shareGame(param);
-		}
-		else if(type == "PropAV"){
-			this.AVSuccessCb = function(arg){
-				this.trickNode.getComponent('TrackManager').continueTrack();
-				EventManager.emit({
-					type:'GetPropSuccess',
-					prop:arg.propKey
-				});
-			}.bind(this);
-			this.AVFailedCb = function(arg){
-				this.trickNode.getComponent('TrackManager').continueTrack();
-				this.showFailInfo("看完视频才能获得奖励，请再看一次");
-			}.bind(this);
-			WxVideoAd.initCreateReward(this.AVSuccessCb,this.AVFailedCb,null);
-		}
-	},
-	showFailInfo(msg){
-		if(this.failNode != null){
-			this.failNode.stopAllActions();
-			this.failNode.removeFromParent();
-			this.failNode.destroy();
-			this.failNode = null;
-		}
-		this.failNode = cc.instantiate(GlobalData.assets['PBShareFail']);
-		this.mainGameBoard.addChild(this.failNode);
-		this.failNode.setPosition(cc.v2(0,0));
-		if(msg != null){
-			this.failNode.getChildByName('tipsLabel').getComponent(cc.Label).string = msg;
-		}
-		var actionEnd = cc.callFunc(function(){
-			if(this.failNode != null){
-				this.failNode.stopAllActions();
-				this.failNode.removeFromParent();
-				this.failNode.destroy();
-				this.failNode = null;
-			}
-		}.bind(this),this);
-		this.failNode.runAction(cc.sequence(cc.fadeIn(0.5),cc.delayTime(1),cc.fadeOut(0.5),actionEnd));
-	},
 	//第一次进入游戏初始化数据
 	initGame(){
 		this.node.active = true;
@@ -168,6 +95,7 @@ cc.Class({
 		this.initGuidGame();
 		GlobalData.GameInfoConfig.gameStatus = 1;
 		GlobalData.GameInfoConfig.gameType = 1;
+		WxBannerAd.createBannerAd();
 	},
 	initGuidGame(){
 		var self = this;
@@ -358,6 +286,7 @@ cc.Class({
 		let gra = this.node.getComponent(cc.Graphics);
 		gra.clear();
 		ThirdAPI.updataGameInfo();
+		WxBannerAd.destroyBannerAd();
 	},
 	update (dt) {
 		if(GlobalData.GameInfoConfig.gameStatus != 1){

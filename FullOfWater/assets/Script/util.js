@@ -99,6 +99,68 @@ let util = {
 		};
 		xhr.send(null);
 	},
+	getPhoneModel:function(){
+		var size = cc.view.getFrameSize();
+		console.log('getFrameSize:',size);
+		var biLi = cc.winSize.width / cc.winSize.height;
+		if (typeof wx !== 'undefined') {
+            try {
+                var sysInfo = wx.getSystemInfoSync();
+                if (sysInfo && sysInfo.model) {
+                    // 适配iphoneX
+                    var isFitIphoneX = (sysInfo.model.toLowerCase().replace(/\s+/g, "").indexOf("iphonex", 0) != -1);
+                    if (isFitIphoneX) {
+                        return 'IphoneX';
+                    }
+					if(biLi < 0.5){
+						return 'IphoneX';
+					}else{
+						return 'Normal';
+					}
+                }
+            } catch (error) {
+				if(biLi < 0.5){
+					return 'IphoneX';
+				}else{
+					return 'Normal';
+				}
+            }
+        }
+		if(biLi < 0.5){
+			return 'IphoneX';
+		}else{
+			return 'Normal';
+		}
+	},
+	customScreenAdapt(pthis){
+		var DesignWidth = 640;
+		var DesignHeight = 1136;
+		let size = cc.view.getFrameSize();
+		GlobalData.phoneModel = this.getPhoneModel();
+		if (GlobalData.phoneModel == 'IphoneX'){ //判断是不是iphonex
+			cc.view.setDesignResolutionSize(1125, 2436, cc.ResolutionPolicy.FIXED_WIDTH);
+			pthis.node.scaleX = 1125 / 640;
+			pthis.node.scaleY = 2436 / 1136;
+			let openDataContext = wx.getOpenDataContext();
+			let sharedCanvas = openDataContext.canvas;
+			sharedCanvas.width = 640;
+			sharedCanvas.height = 1136;
+			pthis.mainGame.setPosition(cc.v2(0,-40));
+			GlobalData.phoneModel = 'IphoneX';
+		}else if(GlobalData.phoneModel == 'IphoneXR'){
+			cc.view.setDesignResolutionSize(828, 1792, cc.ResolutionPolicy.FIXED_WIDTH);
+			pthis.node.scaleX = 828 / 640;
+			pthis.node.scaleY = 1792 / 1136;
+			let openDataContext = wx.getOpenDataContext();
+			let sharedCanvas = openDataContext.canvas;
+			sharedCanvas.width = 640;
+			sharedCanvas.height = 1136;
+			pthis.mainGame.setPosition(cc.v2(0,-40));
+			GlobalData.phoneModel = 'IphoneXR';
+		}else{
+			GlobalData.phoneModel = 'Normal';
+		}
+	},
 	isIphoneX:function(){
 		var size = cc.view.getFrameSize();
         var flag = (size.width == 375 && size.height == 812)
