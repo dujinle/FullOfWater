@@ -164,8 +164,17 @@ cc.Class({
 	eventTouchMove(event){
 		this.graphics.clear();
 		this.graphics.moveTo(this.origin.x,this.origin.y);
-		this.touchLocation.x += event.touch.getDelta().x;
-		this.touchLocation.y += event.touch.getDelta().y;
+		var delta = event.touch.getDelta();
+		if(GlobalData.phoneModel == 'IphoneX'){
+			this.touchLocation.x += (delta.x / (1125 / 640));
+			this.touchLocation.y += (delta.y / (2246 / 1136));
+		}else if(GlobalData.phoneModel == 'IphoneXR'){
+			this.touchLocation.x += (delta.x / (828 / 640));
+			this.touchLocation.y += (delta.y / (1602 / 1136));
+		}else{
+			this.touchLocation.x += delta.x;
+			this.touchLocation.y += delta.y;
+		}
 		let touchPos = this.touchLocation;
 		if (touchPos.y < this.origin.y) {
 			return;

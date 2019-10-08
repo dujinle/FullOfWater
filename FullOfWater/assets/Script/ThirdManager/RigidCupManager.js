@@ -13,7 +13,14 @@ cc.Class({
 	},
 	applyForce(vector,point){
 		var increat = vector;
-		increat.mulSelf(150);
+		
+		if(GlobalData.phoneModel == 'IphoneX'){
+			increat.mulSelf(10 * 150);
+		}else if(GlobalData.phoneModel == 'IphoneXR'){
+			increat.mulSelf(8 * 150);
+		}else{
+			increat.mulSelf(150);
+		}
 		var worldPoint = this.rigidBody.getWorldCenter();
 		console.log('eventTouchCancel',vector,point,worldPoint);
 		this.rigidBody.applyForce(vector,point,true);

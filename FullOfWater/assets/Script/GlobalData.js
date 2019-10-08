@@ -1,7 +1,7 @@
 GlobalData = {
 	phoneModel:'Normal',
 	cdnWebsite:'https://www.enjoymygame.com',
-	cdnFileDefaultPath:'/xiaochengxu/fullofwater/fullofwater1.2.json',
+	cdnFileDefaultPath:'/xiaochengxu/fullofwater/fullofwater1.3.json',
 	msgBox:{
 		DJAVContent:'看完视频才能获得奖励，请再看一次!',
 		DJShareContent:'请分享到不同的群获得更多的好友帮助!'
@@ -1341,53 +1341,6 @@ GlobalData = {
 		shareOrVideoRate:0.5,
 		shareSuccessWeight:[1,1,0.8,0.8,0.6],
 		shareCustomSet:1		//0 关闭 自定义分享 1打开自定义分享
-	},
-	//道具概率参数                                                                                                                
-	GamePropParam:{
-		bagNum:{
-			PropBig:0,
-			PropUpLevel:0,
-			PropAddBall:0
-		},
-		useNum:{
-			PropBig:0,
-			PropUpLevel:0,
-			PropAddBall:0
-		}
-	},
-	cdnPropParam:{	//道具自定义参数
-		PropUnLock:{	//道具解锁盘数
-			PropBig:1,
-			PropUpLevel:1,
-			PropAddBall:1
-		},
-		PropParam:{
-			//变大概率参数设置
-			PropBig:{
-				bagNum:2,
-				useNum:2,
-			},
-			//升级概率参数设置
-			PropUpLevel:{
-				bagNum:2,
-				useNum:2
-			},
-			//加5球概率参数设置
-			PropAddBall:{
-				bagNum:-1,
-				useNum:-1
-			}
-		},
-		PropShareOrADRate:{
-			PropBig:{
-				PropShare:1,
-				PropAV:0
-			},
-			PropUpLevel:{
-				PropShare:1,
-				PropAV:0
-			}
-		}
 	},
 	cdnShareImages:["res/raw-assets/02/0275e94c-56a7-410f-bd1a-fc7483f7d14a.png"],
 	cdnTexts:["你介意男生玩这个游戏吗?"]
