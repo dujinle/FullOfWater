@@ -1,3 +1,4 @@
+var WxChaAd = require('WxChaAd');
 cc.Class({
     extends: cc.Component,
 
@@ -35,13 +36,26 @@ cc.Class({
 	},
 	showPause(){
 		console.log("showPause game board show");
+		var self = this;
 		this.node.active = true;
 		this.gotoHomeButton.scale = 0;
 		this.returnGame.scale = 0;
+		this.returnGame.getComponent(cc.Button).interactable = false;
+		this.gotoHomeButton.getComponent(cc.Button).interactable = false;
 		var returnGameScale = cc.scaleTo(GlobalData.GameConfig.PauseGameMoveTime,1);
 		this.returnGame.runAction(returnGameScale);
 		var gotoHomeScale = cc.scaleTo(GlobalData.GameConfig.PauseGameMoveTime,1);
 		this.gotoHomeButton.runAction(gotoHomeScale);
+		
+		WxChaAd.createChaAd(function(res){
+			if(res == 'error'){
+				self.returnGame.getComponent(cc.Button).interactable = true;
+				self.gotoHomeButton.getComponent(cc.Button).interactable = true;
+			}else if(res == 'close'){
+				self.returnGame.getComponent(cc.Button).interactable = true;
+				self.gotoHomeButton.getComponent(cc.Button).interactable = true;
+			}
+		});
 	},
 	hidePause(callBack = null){
 		console.log("start game board hide");
