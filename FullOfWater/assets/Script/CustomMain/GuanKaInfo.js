@@ -11,23 +11,33 @@ cc.Class({
 		this.type = type;
 		this.gk.getComponent(cc.Label).string = this.guanka;
 		if(this.type == 1){
-			this.gameProp = {};
+			this.gameProp = [];
 			this.gameInfo = GlobalData.GameCheckInfo[this.guanka];
-			for(var key in this.gameInfo){
-				if(GlobalData.assets[key] != null){
-					var pos = this.gameInfo[key];
-					var node = cc.instantiate(GlobalData.assets[key]);
-					if(key == 'RigidCup'){
+			for(var i = 0;i < this.gameInfo.length;i++){
+				var item = this.gameInfo[i];
+				if(GlobalData.assets[item.name] != null){
+					var pos = item.pos;
+					var node = cc.instantiate(GlobalData.assets[item.name]);
+					if(item.name == 'RigidCup'){
 						this.rigidCup = node;
-					}else if(key == 'RigidShuiLongTou'){
+					}else if(item.name == 'RigidShuiLongTou'){
 						this.shuiLongTou = node;
-					}else if(key == 'cupLine'){
+					}else if(item.name == 'cupLine'){
 						this.cupLine = node;
 					}else{
-						this.gameProp[key] = node;
+						this.gameProp.push({name:node.name,node:node});
 					}
 					this.node.addChild(node);
 					node.setPosition(cc.v2(pos[0],pos[1]));
+					if(item.scale != null){
+						node.scale = item.scale;
+					}
+					if(item.scaleY != null){
+						node.scaleY = item.scaleY;
+					}
+					if(item.rotation != null){
+						node.rotation = item.rotation;
+					}
 				}
 			}
 		}
@@ -87,10 +97,12 @@ cc.Class({
 			this.shuiLongTou.destroy();
 			this.cupLine.removeFromParent();
 			this.cupLine.destroy();
-			for(var key in this.gameProp){
-				var node = this.gameProp[key];
-				node.removeFromParent();
-				node.destroy();
+			for(var i = 0;i < this.gameProp.length;i++){
+				var node = this.gameProp[i];
+				if(node.name != null){
+					node.node.removeFromParent();
+					node.node.destroy();
+				}
 			}
 		}
 	}
