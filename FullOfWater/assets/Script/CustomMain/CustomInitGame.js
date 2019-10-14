@@ -28,7 +28,7 @@ cc.Class({
 		this.resLength = 6;
 		GlobalData.assets = {};
 		GlobalData.game = this;
-		ThirdAPI.loadCDNData();
+		//ThirdAPI.loadCDNData();
 		this.loadUpdate = function(){
 			console.log("this.rate:" + self.rate);
 			var scale = Math.floor((self.rate/self.resLength ) * 100);

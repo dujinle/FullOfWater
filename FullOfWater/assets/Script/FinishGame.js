@@ -97,7 +97,7 @@ cc.Class({
 				GlobalData.GameInfoConfig.GameCheckPoint -= 1;
 			}
 			if(GlobalData.GameCheckInfo[GlobalData.GameInfoConfig.GameCheckPoint + 1] == null){
-				GlobalData.game.systemTip.active = true;
+				GlobalData.game.systemTip.getComponent('SystemTip').onShow('GameFinishContent',false,null,GlobalData.GameInfoConfig.gameType);
 				return;
 			}
 			GlobalData.GameInfoConfig.GameCheckPoint += 1;
@@ -111,7 +111,7 @@ cc.Class({
 				GlobalData.GameInfoConfig.GameBuDaoPoint -= 1;
 			}
 			if(GlobalData.GameBuDaoInfo[GlobalData.GameInfoConfig.GameBuDaoPoint + 1] == null){
-				GlobalData.game.systemTip.active = true;
+				GlobalData.game.systemTip.getComponent('SystemTip').onShow('GameFinishContent',false,null,GlobalData.GameInfoConfig.gameType);
 				return;
 			}
 			GlobalData.GameInfoConfig.GameBuDaoPoint += 1;

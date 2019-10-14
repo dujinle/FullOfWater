@@ -77,6 +77,13 @@ cc.Class({
 	},
 	onLeft(){
 		this.guanka -= 1;
+		if(this.guanka <= 0){
+			if(this.type == 1){
+				this.guanka = Object.keys(GlobalData.GameCheckInfo).length - 1;
+			}else{
+				this.guanka = Object.keys(GlobalData.GameBuDaoInfo).length - 1;
+			}
+		}
 		this.destroyGame();
 		this.initGame(this.type);
 	},

@@ -63,12 +63,18 @@ cc.Class({
 			GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
 		}
 		if(GlobalData.GameInfoConfig.guidBDFlag == 0){
-			if(GlobalData.cdnGameConfig.bdOpenType == 1){ //分享
-				if (typeof wx == 'undefined') {
-					this.node.active = false;
+			if (typeof wx == 'undefined') {
+				this.node.active = false;
+				if(GlobalData.cdnGameConfig.bdDelFlag != null && GlobalData.cdnGameConfig.bdDelFlag == 1 && GlobalData.GameInfoConfig.onSystemBDDel == 0){
+					GlobalData.game.systemTip.getComponent('SystemTip').onShow('StartContent',true,function(){
+						GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+					},2);
+				}else{
 					GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
-					return;
 				}
+				return;
+			}
+			if(GlobalData.cdnGameConfig.bdOpenType == 1){ //分享
 				var param = {
 					type:null,
 					arg:'budaoStart',
@@ -81,7 +87,13 @@ cc.Class({
 			}else{
 				this.DJAVTrueCallFunc = function(arg){
 					this.node.active = false;
-					GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+					if(GlobalData.cdnGameConfig.bdDelFlag != null && GlobalData.cdnGameConfig.bdDelFlag == 1 && GlobalData.GameInfoConfig.onSystemBDDel == 0){
+						GlobalData.game.systemTip.getComponent('SystemTip').onShow('StartContent',true,function(){
+							GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+						},2);
+					}else{
+						GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+					}
 				};
 				this.DJAVFalseCallFunc = function(arg){
 					if(arg == 'cancle'){
@@ -95,7 +107,13 @@ cc.Class({
 			}
 		}else{
 			this.node.active = false;
-			GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+			if(GlobalData.cdnGameConfig.bdDelFlag != null && GlobalData.cdnGameConfig.bdDelFlag == 1){
+				GlobalData.game.systemTip.getComponent('SystemTip').onShow('StartContent',true,function(){
+					GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+				},2);
+			}else{
+				GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+			}
 		}
 		GlobalData.game.mainGame.active = false;
 	},
@@ -103,7 +121,13 @@ cc.Class({
 		this.node.active = false;
 		GlobalData.game.mainBuDaoGame.active = false;
 		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-		GlobalData.game.mainGame.getComponent('MainGame').initGame();
+		if(GlobalData.cdnGameConfig.delFalg != null && GlobalData.cdnGameConfig.delFalg == 1 && GlobalData.GameInfoConfig.onSystemDel == 0){
+			GlobalData.game.systemTip.getComponent('SystemTip').onShow('StartContent',true,function(){
+				GlobalData.game.mainGame.getComponent('MainGame').initGame();
+			},1);
+		}else{
+			GlobalData.game.mainGame.getComponent('MainGame').initGame();
+		}
 	},
 	soundButtonCb(){
 		if(GlobalData.GameInfoConfig.audioSupport == 0){
@@ -131,10 +155,20 @@ cc.Class({
 		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
 		GlobalData.game.rankGame.getComponent('RankGame').show();
 	},
+	setButtonCb(){
+		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
+		GlobalData.game.systemTip.getComponent('SystemTip').onShow('DelTrue',true,null,1);
+	},
 	shareSuccessCb(type, shareTicket, arg){
 		if(arg == 'budaoStart'){
 			this.node.active = false;
-			GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+			if(GlobalData.cdnGameConfig.bdDelFlag != null && GlobalData.cdnGameConfig.bdDelFlag == 1 && GlobalData.GameInfoConfig.onSystemBDDel == 0){
+				GlobalData.game.systemTip.getComponent('SystemTip').onShow('StartContent',true,function(){
+					GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+				},2);
+			}else{
+				GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
+			}
 		}
 	},
 	shareFailedCb(type,arg){

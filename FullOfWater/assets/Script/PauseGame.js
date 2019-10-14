@@ -47,15 +47,20 @@ cc.Class({
 		var gotoHomeScale = cc.scaleTo(GlobalData.GameConfig.PauseGameMoveTime,1);
 		this.gotoHomeButton.runAction(gotoHomeScale);
 		
-		WxChaAd.createChaAd(function(res){
-			if(res == 'error'){
-				self.returnGame.getComponent(cc.Button).interactable = true;
-				self.gotoHomeButton.getComponent(cc.Button).interactable = true;
-			}else if(res == 'close'){
-				self.returnGame.getComponent(cc.Button).interactable = true;
-				self.gotoHomeButton.getComponent(cc.Button).interactable = true;
-			}
-		});
+		if (typeof wx !== 'undefined') {
+			WxChaAd.createChaAd(function(res){
+				if(res == 'error'){
+					self.returnGame.getComponent(cc.Button).interactable = true;
+					self.gotoHomeButton.getComponent(cc.Button).interactable = true;
+				}else if(res == 'close'){
+					self.returnGame.getComponent(cc.Button).interactable = true;
+					self.gotoHomeButton.getComponent(cc.Button).interactable = true;
+				}
+			});
+		}else{
+			self.returnGame.getComponent(cc.Button).interactable = true;
+			self.gotoHomeButton.getComponent(cc.Button).interactable = true;
+		}
 	},
 	hidePause(callBack = null){
 		console.log("start game board hide");

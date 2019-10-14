@@ -1,10 +1,13 @@
 GlobalData = {
 	phoneModel:'Normal',
 	cdnWebsite:'https://www.enjoymygame.com',
-	cdnFileDefaultPath:'/xiaochengxu/fullofwater/fullofwater1.3.json',
+	cdnFileDefaultPath:'/xiaochengxu/fullofwater/fullofwater2.json',
 	msgBox:{
 		DJAVContent:'看完视频才能获得奖励，请再看一次!',
-		DJShareContent:'请分享到不同的群获得更多的好友帮助!'
+		DJShareContent:'请分享到不同的群获得更多的好友帮助!',
+		GameFinishContent:"恭喜您！已经通关！敬请期待更多游戏玩法！",
+		StartContent:"关卡进行了重新升级，是否清除数据，重新开始?",
+		DelTrue:"确定清除游戏数据？"
 	},
 	AudioManager:{
 		ButtonClick:0,
@@ -852,464 +855,384 @@ GlobalData = {
 		]
 	},
 	GameCheckInfo:{
-		"1": [
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidCup",
-				"pos": [
-					30,
-					-327
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "cupLine",
-				"pos": [
-					-200,
-					-315
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidDangBan120",
-				"pos": [
-					-200,
-					-372
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidShuiLongTou",
-				"pos": [
-					-200,
-					0
-				]
-			}
-		],
-		"2": [
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidCup",
-				"pos": [
-					-225.6667487018783,
-					-328.1225484220456
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidDangBan240",
-				"pos": [
-					177.97901049475263,
-					-268.24587706146923
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidShuiLongTou",
-				"pos": [
-					208.63568215892053,
-					99.63418290854577
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "cupLine",
-				"pos": [
-					208.63556571564538,
-					-209.97791982206803
-				]
-			}
-		],
-		"3": [
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 45,
-				"name": "RigidXZDangBan120",
-				"pos": [
-					-192.455772113943,
-					-332.1139430284857
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidDangBan120",
-				"pos": [
-					-86.86056971514242,
-					-369.5832083958021
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidShuiLongTou",
-				"pos": [
-					-81.7511244377811,
-					-71.5322338830585
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidCup",
-				"pos": [
-					209.48738765647192,
-					-328.23181149418036
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "cupLine",
-				"pos": [
-					-81.75139589864747,
-					-311.1387322125751
-				]
-			}
-		],
-		"4": [
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 45,
-				"name": "RigidXZDangBan120",
-				"pos": [
-					-238.44077961019485,
-					-269.0974512743628
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidDangBan120",
-				"pos": [
-					-81.7511244377811,
-					-316.7856071964018
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidShuiLongTou",
-				"pos": [
-					-76.64167916041976,
-					3.4062968515740977
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidCup",
-				"pos": [
-					209.48738765647192,
-					-328.23181149418036
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "cupLine",
-				"pos": [
-					-76.64167916041976,
-					-258.3411310131748
-				]
-			}
-		],
-		"5": [
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidDangBan240",
-				"pos": [
-					-124.32983508245877,
-					-309.97301349325335
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidShuiLongTou",
-				"pos": [
-					-122.62668665667164,
-					102.18890554722645
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "cupLine",
-				"pos": [
-					-122.62714002543743,
-					-251.7050613502377
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidCup",
-				"pos": [
-					214.5957102273818,
-					-328.2318957672435
-				]
-			}
-		],
-		"6": [
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": -45,
-				"name": "RigidXFDangBan120",
-				"pos": [
-					-226.5187406296851,
-					-328.7076461769116
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 45,
-				"name": "RigidXZDangBan120",
-				"pos": [
-					-45.98500749625185,
-					-328.7076461769115
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidDangBan240",
-				"pos": [
-					-139.65817091454272,
-					-270.8005997001499
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidShuiLongTou",
-				"pos": [
-					-127.73613193403298,
-					83.45427286356824
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "cupLine",
-				"pos": [
-					-127.7361886796183,
-					-212.53386380477718
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidCup",
-				"pos": [
-					226.51905082369478,
-					-328.2319358383977
-				]
-			}
-		],
-		"7": [
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidZheng",
-				"pos": [
-					154.98650674662673,
-					-327.0044977511244
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidDangBan240",
-				"pos": [
-					154.98650674662673,
-					-267.3943028485758
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidShuiLongTou",
-				"pos": [
-					153.28335832083962,
-					74.93853073463265
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "cupLine",
-				"pos": [
-					153.28335832083962,
-					-207.4239363185581
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidCup",
-				"pos": [
-					-211.19011049730415,
-					-327.23184156278444
-				]
-			}
-		],
-		"8": [
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidZheng",
-				"pos": [
-					185.64317841079463,
-					-328.7076461769115
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidDangBan240",
-				"pos": [
-					35.76611694152922,
-					-270.8005997001499
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": -45,
-				"name": "RigidXFDangBan120",
-				"pos": [
-					-88.5637181409295,
-					-328.7076461769115
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "cupLine",
-				"pos": [
-					37.46920667034914,
-					-212.52725238282125
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidCup",
-				"pos": [
-					-240.14354744136915,
-					-327.0744816943791
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidShuiLongTou",
-				"pos": [
-					37.46926536731638,
-					112.40779610194909
-				]
-			}
-		],
-		"9": [
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidDangBan120",
-				"pos": [
-					-156.68965517241378,
-					-139.65817091454272
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "cupLine",
-				"pos": [
-					-151.5802688609299,
-					-81.31463867465021
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 45,
-				"name": "RigidXZDangBan120",
-				"pos": [
-					-248.6596701649175,
-					-85.15742128935528
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidShuiLongTou",
-				"pos": [
-					-151.58020989505246,
-					235.0344827586207
-				]
-			},
-			{
-				"scaleY": 1,
-				"scale": 1,
-				"rotation": 0,
-				"name": "RigidCup",
-				"pos": [
-					200.9718948374914,
-					-327.0744816943792
-				]
-			}
-		]
+	"1":[
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidDangBan240",
+			"pos": [
+				-150,
+				-368
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidShuiLongTou",
+			"pos": [
+				-150,
+				132
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.0000589332673809421,
+			"name": "RigidCup",
+			"pos": [
+				250,
+				-327.23196915419095
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000013861292578836861,
+			"name": "cupLine",
+			"pos": [
+				-150.0000580505787,
+				-309.7321931431305
+			]
+		}
+	],
+	"2":[
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidDangBan240",
+			"pos": [
+				-150,
+				-368
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidShuiLongTou",
+			"pos": [
+				-150,
+				32
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.0000589332673809421,
+			"name": "RigidCup",
+			"pos": [
+				250,
+				-327.23196915419095
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000013861292578836861,
+			"name": "cupLine",
+			"pos": [
+				-150.0000580505787,
+				-309.7321931431305
+			]
+		}
+	],
+	"3":[
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidDangBan240",
+			"pos": [
+				-150,
+				-368
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidShuiLongTou",
+			"pos": [
+				-150,
+				132
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.0000589332673809421,
+			"name": "RigidCup",
+			"pos": [
+				150,
+				-327.23196915419095
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000013861292578836861,
+			"name": "cupLine",
+			"pos": [
+				-150.0000580505787,
+				-309.7321931431305
+			]
+		}
+	],
+	"4":[
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidDangBan240",
+			"pos": [
+				-150,
+				-268
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidShuiLongTou",
+			"pos": [
+				-150,
+				132
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.0000589332673809421,
+			"name": "RigidCup",
+			"pos": [
+				250,
+				-327.23196915419095
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000013861292578836861,
+			"name": "cupLine",
+			"pos": [
+				-150.0000580505787,
+				-209.7321931431305
+			]
+		}
+	],
+	"5":[
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidDangBan240",
+			"pos": [
+				-150,
+				-368
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidShuiLongTou",
+			"pos": [
+				-150,
+				-68
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.0000589332673809421,
+			"name": "RigidCup",
+			"pos": [
+				250,
+				-327.23196915419095
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000013861292578836861,
+			"name": "cupLine",
+			"pos": [
+				-150.0000580505787,
+				-309.7321931431305
+			]
+		}
+	],
+	"6":[
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidDangBan240",
+			"pos": [
+				150,
+				-370
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000031035247184048786,
+			"name": "RigidCup",
+			"pos": [
+				-250,
+				-327.03976213984527
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidShuiLongTou",
+			"pos": [
+				150,
+				132
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000013861292578842743,
+			"name": "cupLine",
+			"pos": [
+				150,
+				-311.7321931431305
+			]
+		}
+	],
+	"7":[
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidDangBan240",
+			"pos": [
+				150,
+				-370
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000031035247184048786,
+			"name": "RigidCup",
+			"pos": [
+				-250,
+				-327.03976213984527
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidShuiLongTou",
+			"pos": [
+				150,
+				32
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000013861292578842743,
+			"name": "cupLine",
+			"pos": [
+				150,
+				-311.7321931431305
+			]
+		}
+	],
+	"8":[
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidDangBan240",
+			"pos": [
+				150,
+				-370
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000031035247184048786,
+			"name": "RigidCup",
+			"pos": [
+				-150,
+				-327.03976213984527
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidShuiLongTou",
+			"pos": [
+				150,
+				132
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000013861292578842743,
+			"name": "cupLine",
+			"pos": [
+				150,
+				-311.7321931431305
+			]
+		}
+	],
+	"9":[
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidDangBan240",
+			"pos": [
+				150,
+				-270
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000031035247184048786,
+			"name": "RigidCup",
+			"pos": [
+				-250,
+				-327.03976213984527
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": 0,
+			"name": "RigidShuiLongTou",
+			"pos": [
+				150,
+				132
+			]
+		},
+		{
+			"scaleY": 1,
+			"scale": 1,
+			"rotation": -0.000013861292578842743,
+			"name": "cupLine",
+			"pos": [
+				150,
+				-211.7321931431305
+			]
+		}
+	],
 	},
 	GameConfig:{
 		tryTimes:3,
@@ -1327,6 +1250,8 @@ GlobalData = {
 		gameType:1,// 1:游戏1 2:游戏2
 		gameTime:0,
 		guidFlag:0,
+		onSystemDel:0,
+		onSystemBDDel:0,
 		guidBDFlag:0,
 		shareTimes:0,
 		gameStatus:0,
@@ -1338,6 +1263,8 @@ GlobalData = {
 		refreshBanner:0,		//0 关闭	1打开
 		minShareTime:2,
 		bdOpenType:2,
+		bdDelFlag:1,
+		delFalg:1,
 		shareOrVideoRate:0.5,
 		shareSuccessWeight:[1,1,0.8,0.8,0.6],
 		shareCustomSet:1		//0 关闭 自定义分享 1打开自定义分享
