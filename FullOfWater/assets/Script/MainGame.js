@@ -117,7 +117,7 @@ cc.Class({
 		let PTM_RATIO = cc.PhysicsManager.PTM_RATIO;
 		var shuiLongTouSize = this.shuiLongTou.getContentSize();
 		var shuiLongTouPos = this.shuiLongTou.getPosition();
-		var size = this.node.getContentSize();
+		var size = cc.winSize;
 		this.particleSystem = this.pymanager._particles;
 		var box = new b2.PolygonShape();
 		box.SetAsBox(shuiLongTouSize.width/2/PTM_RATIO, (shuiLongTouSize.height * 1.5)/PTM_RATIO, new b2.Vec2(0, 0), 0);
@@ -165,6 +165,7 @@ cc.Class({
 		this.graphics.clear();
 		this.graphics.moveTo(this.origin.x,this.origin.y);
 		var delta = event.touch.getDelta();
+		/*
 		if(GlobalData.phoneModel == 'IphoneX'){
 			this.touchLocation.x += (delta.x / (1125 / 640));
 			this.touchLocation.y += (delta.y / (2246 / 1136));
@@ -175,6 +176,9 @@ cc.Class({
 			this.touchLocation.x += delta.x;
 			this.touchLocation.y += delta.y;
 		}
+		*/
+		this.touchLocation.x += delta.x;
+		this.touchLocation.y += delta.y;
 		let touchPos = this.touchLocation;
 		if (touchPos.y < this.origin.y) {
 			return;
@@ -319,7 +323,7 @@ cc.Class({
 			return;
 		}
 
-		let size = this.node.getContentSize();
+		let size = cc.winSize;
 		let PTM_RATIO = cc.PhysicsManager.PTM_RATIO;
 		let SLTPos = this.shuiLongTou.getPosition();
 		let SLTSize = this.shuiLongTou.getContentSize();

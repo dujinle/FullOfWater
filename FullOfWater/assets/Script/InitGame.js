@@ -28,7 +28,7 @@ cc.Class({
 		this.pauseGame.active = false;
 		this.rankGame.active = false;
 		this.systemTip.active = false;
-		util.customScreenAdapt(this);
+		util.customScreenAdapt();
     },
 	loadDataSync(){
 		var self = this;

@@ -132,31 +132,24 @@ let util = {
 			return 'Normal';
 		}
 	},
-	customScreenAdapt(pthis){
-		var DesignWidth = 640;
-		var DesignHeight = 1136;
+	customScreenAdapt(){
 		let size = cc.view.getFrameSize();
 		GlobalData.phoneModel = this.getPhoneModel();
 		if (GlobalData.phoneModel == 'IphoneX'){ //判断是不是iphonex
-			cc.view.setDesignResolutionSize(1125, 2436, cc.ResolutionPolicy.FIXED_WIDTH);
-			pthis.node.scaleX = 1125 / 640;
-			pthis.node.scaleY = 2436 / 1136;
-			let openDataContext = wx.getOpenDataContext();
-			let sharedCanvas = openDataContext.canvas;
-			sharedCanvas.width = 640;
-			sharedCanvas.height = 1136;
-			pthis.mainGame.setPosition(cc.v2(0,-40));
+			if(typeof wx != 'undefined'){
+				let openDataContext = wx.getOpenDataContext();
+				let sharedCanvas = openDataContext.canvas;
+				sharedCanvas.width = 640;
+				sharedCanvas.height = 1136;
+			}
 			GlobalData.phoneModel = 'IphoneX';
 		}else if(GlobalData.phoneModel == 'IphoneXR'){
-			cc.view.setDesignResolutionSize(828, 1792, cc.ResolutionPolicy.FIXED_WIDTH);
-			pthis.node.scaleX = 828 / 640;
-			pthis.node.scaleY = 1792 / 1136;
-			let openDataContext = wx.getOpenDataContext();
-			let sharedCanvas = openDataContext.canvas;
-			sharedCanvas.width = 640;
-			sharedCanvas.height = 1136;
-			pthis.mainGame.setPosition(cc.v2(0,-40));
-			GlobalData.phoneModel = 'IphoneXR';
+			if(typeof wx != 'undefined'){
+				let openDataContext = wx.getOpenDataContext();
+				let sharedCanvas = openDataContext.canvas;
+				sharedCanvas.width = 640;
+				sharedCanvas.height = 1136;
+			}
 		}else{
 			GlobalData.phoneModel = 'Normal';
 		}

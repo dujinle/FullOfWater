@@ -111,7 +111,7 @@ cc.Class({
 		let PTM_RATIO = cc.PhysicsManager.PTM_RATIO;
 		var shuiLongTouSize = this.rigidCup.getContentSize();
 		var shuiLongTouPos = this.rigidCup.getPosition();
-		var size = this.node.getContentSize();
+		var size = cc.winSize;
 		this.particleSystem = this.pymanager._particles;
 		var box = new b2.PolygonShape();
 		box.SetAsBox(shuiLongTouSize.width/3/PTM_RATIO, shuiLongTouSize.height/2/PTM_RATIO, new b2.Vec2(0, 0), 0);
@@ -251,7 +251,7 @@ cc.Class({
 			return;
 		}
 
-		let size = this.node.getContentSize();
+		let size = cc.winSize;
 		let PTM_RATIO = cc.PhysicsManager.PTM_RATIO;
 		let vertsCount = this.particleSystem.GetParticleCount();
 		let posVerts = this.particleSystem.GetPositionBuffer();
