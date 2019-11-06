@@ -1248,6 +1248,7 @@ GlobalData = {
 		GameBuDaoPoint:1,
 		tryTimesCurrent:0,
 		gameType:1,// 1:游戏1 2:游戏2
+		gameAdType:1,	//1:广告 2:推荐位
 		gameTime:0,
 		guidFlag:0,
 		onSystemDel:0,
@@ -1265,6 +1266,7 @@ GlobalData = {
 		bdOpenType:2,
 		bdDelFlag:1,
 		delFalg:1,
+		showADTJRate:1,
 		shareOrVideoRate:0.5,
 		shareSuccessWeight:[1,1,0.8,0.8,0.6],
 		shareCustomSet:1		//0 关闭 自定义分享 1打开自定义分享

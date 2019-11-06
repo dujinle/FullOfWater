@@ -1,5 +1,6 @@
 var util = require('util');
 var WxBannerAd = require('WxBannerAd');
+var WxPortal = require('WxPortal');
 var ThirdAPI = require('ThirdAPI');
 cc.Class({
 	extends: cc.Component,
@@ -82,7 +83,19 @@ cc.Class({
 		this.initGuidGame();
 		this.initParticle();
 		this.addTouchEvent();
-		WxBannerAd.createBannerAd();
+		//添加广告位
+		if(Math.random() > GlobalData.cdnGameConfig.showADTJRate){
+			GlobalData.GameInfoConfig.gameAdType = 1;
+			WxBannerAd.createBannerAd();
+		}else{
+			GlobalData.GameInfoConfig.gameAdType = 2;
+			WxPortal.createAd(2,(err)=>{
+				if(err == 'error'){
+					GlobalData.GameInfoConfig.gameAdType = 1;
+					WxBannerAd.createBannerAd();
+				}
+			});
+		}
 	},
 	initGuidGame(){
 		var self = this;
@@ -227,7 +240,11 @@ cc.Class({
 		let gra = this.node.getComponent(cc.Graphics);
 		gra.clear();
 		ThirdAPI.updataGameInfo();
-		WxBannerAd.destroyBannerAd();
+		if(GlobalData.GameInfoConfig.gameAdType == 1){
+			WxBannerAd.destroyBannerAd();
+		}else{
+			WxPortal.destroyBannerAd(2);
+		}
 	},
 	update (dt) {
 		if(GlobalData.GameInfoConfig.gameStatus != 1){

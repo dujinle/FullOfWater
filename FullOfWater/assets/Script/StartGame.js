@@ -1,5 +1,6 @@
 var ThirdAPI = require('ThirdAPI');
 var WxVideoAd = require('WxVideoAd');
+var WxPortal = require('WxPortal');
 cc.Class({
     extends: cc.Component,
 
@@ -57,6 +58,9 @@ cc.Class({
 		}else{
 			this.openType.active = false;
 		}
+		WxPortal.createAd(1,(err)=>{
+			console.log(err);
+		})
 	},
 	bdButtonCb(event){
 		if(event != null){
@@ -72,6 +76,7 @@ cc.Class({
 				}else{
 					GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
 				}
+				WxPortal.destroyBannerAd(1);
 				return;
 			}
 			if(GlobalData.cdnGameConfig.bdOpenType == 1){ //分享
@@ -87,6 +92,7 @@ cc.Class({
 			}else{
 				this.DJAVTrueCallFunc = function(arg){
 					this.node.active = false;
+					WxPortal.destroyBannerAd(1);
 					if(GlobalData.cdnGameConfig.bdDelFlag != null && GlobalData.cdnGameConfig.bdDelFlag == 1 && GlobalData.GameInfoConfig.onSystemBDDel == 0){
 						GlobalData.game.systemTip.getComponent('SystemTip').onShow('StartContent',true,function(){
 							GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
@@ -114,6 +120,7 @@ cc.Class({
 			}else{
 				GlobalData.game.mainBuDaoGame.getComponent('MainBuDaoGame').initGame();
 			}
+			WxPortal.destroyBannerAd(1);
 		}
 		GlobalData.game.mainGame.active = false;
 	},
@@ -123,11 +130,13 @@ cc.Class({
 		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
 		if(GlobalData.cdnGameConfig.delFalg != null && GlobalData.cdnGameConfig.delFalg == 1 && GlobalData.GameInfoConfig.onSystemDel == 0){
 			GlobalData.game.systemTip.getComponent('SystemTip').onShow('StartContent',true,function(){
+				
 				GlobalData.game.mainGame.getComponent('MainGame').initGame();
 			},1);
 		}else{
 			GlobalData.game.mainGame.getComponent('MainGame').initGame();
 		}
+		WxPortal.destroyBannerAd(1);
 	},
 	soundButtonCb(){
 		if(GlobalData.GameInfoConfig.audioSupport == 0){
@@ -152,8 +161,9 @@ cc.Class({
 		ThirdAPI.shareGame(param);
 	},
 	rankButtonCb(){
+		WxPortal.hideAd(1);
 		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
-		GlobalData.game.rankGame.getComponent('RankGame').show();
+		GlobalData.game.rankGame.getComponent('RankGame').show('start',1);
 	},
 	setButtonCb(){
 		GlobalData.game.audioManager.getComponent('AudioManager').play(GlobalData.AudioManager.ButtonClick);
@@ -161,6 +171,7 @@ cc.Class({
 	},
 	shareSuccessCb(type, shareTicket, arg){
 		if(arg == 'budaoStart'){
+			WxPortal.destroyBannerAd(1);
 			this.node.active = false;
 			if(GlobalData.cdnGameConfig.bdDelFlag != null && GlobalData.cdnGameConfig.bdDelFlag == 1 && GlobalData.GameInfoConfig.onSystemBDDel == 0){
 				GlobalData.game.systemTip.getComponent('SystemTip').onShow('StartContent',true,function(){

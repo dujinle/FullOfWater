@@ -1,4 +1,5 @@
 var WxChaAd = require('WxChaAd');
+var WxPortal = require('WxPortal');
 cc.Class({
     extends: cc.Component,
 
@@ -47,7 +48,9 @@ cc.Class({
 		var gotoHomeScale = cc.scaleTo(GlobalData.GameConfig.PauseGameMoveTime,1);
 		this.gotoHomeButton.runAction(gotoHomeScale);
 		
-		if (typeof wx !== 'undefined') {
+		//添加广告位
+		if(Math.random() > GlobalData.cdnGameConfig.showADTJRate){
+			GlobalData.GameInfoConfig.gameAdType = 1;
 			WxChaAd.createChaAd(function(res){
 				if(res == 'error'){
 					self.returnGame.getComponent(cc.Button).interactable = true;
@@ -58,8 +61,24 @@ cc.Class({
 				}
 			});
 		}else{
-			self.returnGame.getComponent(cc.Button).interactable = true;
-			self.gotoHomeButton.getComponent(cc.Button).interactable = true;
+			GlobalData.GameInfoConfig.gameAdType = 2;
+			WxPortal.createAd(3,(err)=>{
+				if(err == 'error'){
+					GlobalData.GameInfoConfig.gameAdType = 1;
+					WxChaAd.createChaAd(function(res){
+						if(res == 'error'){
+							self.returnGame.getComponent(cc.Button).interactable = true;
+							self.gotoHomeButton.getComponent(cc.Button).interactable = true;
+						}else if(res == 'close'){
+							self.returnGame.getComponent(cc.Button).interactable = true;
+							self.gotoHomeButton.getComponent(cc.Button).interactable = true;
+						}
+					});
+				}else if(err == 'close'){
+					self.returnGame.getComponent(cc.Button).interactable = true;
+					self.gotoHomeButton.getComponent(cc.Button).interactable = true;
+				}
+			});
 		}
 	},
 	hidePause(callBack = null){

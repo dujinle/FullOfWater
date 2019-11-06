@@ -1,8 +1,12 @@
 var ThirdAPI = require('ThirdAPI');
+var WxPortal = require('WxPortal');
+var WxBannerAd = require('WxBannerAd');
 cc.Class({
     extends: cc.Component,
 
     properties: {
+		scene:null,
+		adType:0,
 		rankSprite:cc.Node,
 		isDraw:false,
     },
@@ -24,11 +28,23 @@ cc.Class({
 	onClose(){
 		this.isDraw = false;
 		this.node.active = false;
+		//从结束界面跳转过来的
+		if(this.scene == 'finish'){
+			if(this.adType == 0){
+				WxBannerAd.showBannerAd();
+			}else{
+				WxPortal.showBannerAd(2);
+			}
+		}else if(this.scene == 'start'){
+			WxPortal.showBannerAd(1);
+		}
 	},
-	show(){
+	show(scene,adType){
 		console.log("rank game show");
 		this.isDraw = true;
 		this.node.active = true;
+		this.scene = scene;
+		this.adType = adType;
 		var param = {
 			type:'rankUIFriendRank',
 			game:GlobalData.GameInfoConfig.gameType

@@ -1,5 +1,6 @@
 var ThirdAPI = require('ThirdAPI');
 var WxVideoAd = require('WxVideoAd');
+var WxPortal = require('WxPortal');
 cc.Class({
     extends: cc.Component,
 
@@ -62,7 +63,12 @@ cc.Class({
 	},
 	rankButtonCb(){
 		this.isDraw = false;
-		GlobalData.game.rankGame.getComponent('RankGame').show();
+		if(GlobalData.GameInfoConfig.gameAdType == 1){
+			WxBannerAd.hideBannerAd();
+		}else{
+			WxPortal.hideAd(2);
+		}
+		GlobalData.game.rankGame.getComponent('RankGame').show('finish',GlobalData.GameInfoConfig.gameAdType);
 	},
 	restartButtonCb(){
 		if(GlobalData.GameInfoConfig.gameFailFlag == 1 && typeof wx !== 'undefined'){

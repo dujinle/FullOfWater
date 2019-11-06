@@ -7,7 +7,6 @@ temp/
 local/
 build/
 win_build/
-FullOfWater/build-templates/
 wx-open-data-project/build
 
 #/////////////////////////////////////////////////////////////////////////////
